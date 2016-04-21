@@ -6,7 +6,7 @@
 clear all
 close all
 
-cd('../');
+cd('../../');
 cd('actin/');
 files = dir('*.tif');
 cd('../');
@@ -27,9 +27,9 @@ for loop=1:length(files);
     Image_borders = imread('tracked_bd.png');
     cd('../../');
     
-    cd('script/');
+    cd('actin-project/script/');
     actin_analysis_v1;
-    cd('../');
+    cd('../../');
  
     clear density_filename gradient_filename image_filename summary summary_filename
     cd('density/');
@@ -47,9 +47,9 @@ for loop=1:length(files);
     print(image1, '-dtiff', '-r150', image_filename);
     cd('../');
     
-    cd('script/');
+    cd('actin-project/script/');
     vonmises_fit_dist_sum;
-    cd('../');
+    cd('../../');
     
     cd('summary/');
     summary = zeros(length(SD),8);
@@ -77,4 +77,4 @@ for loop=1:length(files);
     close all
 end
 
-
+cd('actin-project/script/');
