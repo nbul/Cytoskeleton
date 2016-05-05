@@ -10,7 +10,6 @@ cd('../../');
 cd('actin/');
 files = dir('*.tif');
 cd('../');
-mkdir('density');
 mkdir('distribution');
 mkdir('summary');
 mkdir('images_analysed');
@@ -30,12 +29,6 @@ for loop=1:length(files);
     cd('actin-project/script/');
     actin_analysis_v1;
     cd('../../');
- 
-    clear density_filename gradient_filename image_filename summary summary_filename
-    cd('density/');
-    density_filename = [num2str(Number),'_density.csv'];
-    csvwrite(density_filename, mts_density');
-    cd('../');
  
     cd('distribution/');
     gradient_filename = [num2str(Number),'_distribution.csv'];
@@ -69,9 +62,10 @@ for loop=1:length(files);
             summary(counter2, 8) = abs(summary(counter2, 4)-summary(counter2, 7));
         end
     end
+    summary(:,9) = mts_area';
     
     summary_filename = [num2str(Number),'_summary.csv'];
-    headers = {'Cell', 'Density', 'SD', 'Direction_actin','Area', 'Eccentricity', 'Dorection_cell','DEV'};
+    headers = {'Cell', 'Density', 'SD', 'Direction_actin','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area'};
     csvwrite_with_headers(summary_filename,summary,headers);
     cd('../');
     close all

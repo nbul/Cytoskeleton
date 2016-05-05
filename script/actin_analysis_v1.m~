@@ -24,26 +24,23 @@
     clear im_cells_data
     im_cells_data=regionprops(L,'Area', 'Eccentricity','MajorAxisLength','MinorAxisLength' , 'Orientation','PixelIdxList','PixelList','Centroid');
     
-    cell_counter = 5;
+    cell_counter = 0;
     cell_filteredcounter = 0;
     
     clear cell_data b_valid
     clear im_cells_data2
     
     for i=6:numel(im_cells_data);
-        cell_counter = cell_counter + 1;
-        cell_data(i,1) = cell_counter;
-        if im_cells_data(i).Area > 1000;
+        if im_cells_data(i).Area > 200;
+            cell_counter = cell_counter + 1;
+            cell_data(cell_counter,1) = cell_counter;
+            cell_data(cell_counter,2) = im_cells_data(i).Area;
+            cell_data(cell_counter,3) = im_cells_data(i).Eccentricity;
+            cell_data(cell_counter,4) = im_cells_data(i).Orientation;
             cell_filteredcounter = cell_filteredcounter + 1;
-            cell_data(i,2) = cell_filteredcounter;
+            good_cell(cell_counter)=i;
             b_valid(cell_filteredcounter) = B(i);
-        else
-            cell_data(i,2) = 0;
-            
         end
-        cell_data(i,3) = im_cells_data(i).Area;
-        cell_data(i,4) = im_cells_data(i).Eccentricity;
-        cell_data(i,5) = im_cells_data(i).Orientation;
     end
  
     
@@ -64,23 +61,24 @@
     
     %% Processed Image for Density Analysis
     
-    clear levels_density im_bin_c filtered_substracted_bin
+    clear levels_density im_bin_c filtered_substracted_bin image1
     
-    levels_density = (graythresh(imcorrected))*1;
-    im_bin_c = im2bw(imcorrected,levels_density);
+    levels_density = (graythresh(image_adjusted))*1;
+    im_bin_c = im2bw(image_adjusted,levels_density);
 
-    figure, imshow(image_adjusted), title('Adjusted MTs Image')
-     hold on;
+    image1=figure; 
+    imshow(image_adjusted), title('Adjusted MTs Image');
+    hold on;
     for k = 1:length(b_valid);
         clear boundary_valid
-        boundary_valid = b_valid{k};
+        boundary_valid = b_valid{good_cell(k)};
         
         clear c cell
-        cell = k+5;
+        cell = good_cell(k)+5;
         c = im_cells_data(cell).Centroid;
         
         clear c_labels
-        c_labels = text(c(1), c(2), sprintf('%d', k),'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+        c_labels = text(c(1), c(2), sprintf('%d', good_cell(k)),'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
         set(c_labels,'Color',[1 1 0])
         plot(boundary_valid(:,2), boundary_valid(:,1), 'r', 'LineWidth', 2);
     end;
@@ -92,7 +90,7 @@
     clear to_analyse_back_o to_analyse_back_c
     clear signal_original signal_corrected
     clear background_im_bin_c background_original background_corrected
-    clear mts_density result
+    clear mts_density result m_added_norm
     inv_one_matrix = ones(im_x,im_y);
     background_im_bin_c = inv_one_matrix - im_bin_c;
     signal_original = image_original_double .* im_bin_c;
@@ -102,11 +100,11 @@
     Gx = [-2 -1 0 1 2;-3 -2 0 2 3;-4 -3 0 3 4;-3 -2 0 2 3;-2 -1 0 1 2];
     Gy = Gx';
     
-     m_added_norm = zeros(45,numel(b_valid)+1);
+    m_added_norm = zeros(45,numel(b_valid)+1);
     for k = 1:numel(b_valid);
    
-        select_object1{k} = poly2mask(b_valid{k}(:,2),b_valid{k}(:,1),im_x,im_y);
-        object_double = im2double(select_object1{k});
+        select_object1{good_cell(k)} = poly2mask(b_valid{good_cell(k)}(:,2),b_valid{good_cell(k)}(:,1),im_x,im_y);
+        object_double = im2double(select_object1{good_cell(k)});
       
         % Density data from signal and background
  
@@ -132,7 +130,7 @@
             end
         end
         mts_density(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
-       
+        mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
         
         %Apply Sobel Filter over a MTs image to test it
         clear H_full V_full H V M D_radians pp qq x y
@@ -189,7 +187,7 @@
         end;
         
        % Sortin by angle and shifting to -90 to 90
-        clear mxd_sorted mxd_shifted m_added m_added_norm total
+        clear mxd_sorted mxd_shifted m_added total
         mxd_sorted = sortrows(mxd_corrected,1);
         mxd_shifted = [mxd_sorted(:,1) - 90, mxd_sorted(:,2)]; %To place the values between [-90 90]
         
@@ -232,56 +230,6 @@
 end;
 
 
-clear t33_empty
-t33_empty = cellfun(@isempty, t33);
-
-clear t22_empty
-t22_empty = cellfun(@isempty, t22);
-
-clear t1_empty
-t1_empty = cellfun(@isempty,t1);
-
-clear z
-p = 1;
-        for z = 1:numel(t33);
-            z;
-            p = p + 1;
-            if t33_empty(z) == 0;
-                t3(:,p) = t33{z}(:,2);
-            else
-                t3(:,p) = 0;
-            end
-        end
-        t3(:,1) = t33{1}(:,1);
-
-clear z
-p = 1;
-        for z = 1:numel(t22);
-            z;
-            p = p + 1;
-            if t22_empty(z) == 0;
-                t2(:,p) = t22{z}(:,2);
-            else
-                t2(:,p) = 0;
-            end
-        end
-        t2(:,1) = t22{1}(:,1);
-
-        
-clear z
-p = 1;
-        for z = 1:numel(t1);
-            p = p + 1;
-            if t1_empty(z) == 0;
-                t(:,p) = t1{z}(:,2);
-            else
-                t(:,p) = 0;
-            end
-        end
-        t(:,1) = t1{1}(:,1);
-
-
-        
 
 
 

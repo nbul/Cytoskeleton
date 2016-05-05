@@ -24,23 +24,23 @@
     clear im_cells_data
     im_cells_data=regionprops(L,'Area', 'Eccentricity','MajorAxisLength','MinorAxisLength' , 'Orientation','PixelIdxList','PixelList','Centroid');
     
-    cell_counter = 0;
+    cell_counter = 5;
     cell_filteredcounter = 0;
     
     clear cell_data b_valid
     clear im_cells_data2
     
     for i=6:numel(im_cells_data);
-        if im_cells_data(i).Area > 1000;
+        if im_cells_data(i).Area > 200;
             cell_counter = cell_counter + 1;
             cell_data(cell_counter,1) = cell_counter;
             cell_data(cell_counter,2) = im_cells_data(i).Area;
             cell_data(cell_counter,3) = im_cells_data(i).Eccentricity;
             cell_data(cell_counter,4) = im_cells_data(i).Orientation;
             cell_filteredcounter = cell_filteredcounter + 1;
+            good_cell(cell_filteredcounter)=i;
             b_valid(cell_filteredcounter) = B(i);
         end
-  
     end
  
     
@@ -63,8 +63,8 @@
     
     clear levels_density im_bin_c filtered_substracted_bin image1
     
-    levels_density = (graythresh(imcorrected))*1;
-    im_bin_c = im2bw(imcorrected,levels_density);
+    levels_density = (graythresh(image_adjusted))*1;
+    im_bin_c = im2bw(image_adjusted,levels_density);
 
     image1=figure; 
     imshow(image_adjusted), title('Adjusted MTs Image');
@@ -75,7 +75,7 @@
         
         clear c cell
         cell = k+5;
-        c = im_cells_data(cell).Centroid;
+        c = im_cells_data(good_cell(k)).Centroid;
         
         clear c_labels
         c_labels = text(c(1), c(2), sprintf('%d', k),'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
@@ -130,7 +130,7 @@
             end
         end
         mts_density(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
-       
+        mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
         
         %Apply Sobel Filter over a MTs image to test it
         clear H_full V_full H V M D_radians pp qq x y
