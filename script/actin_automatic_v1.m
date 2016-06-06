@@ -18,10 +18,10 @@ for loop=1:length(files);
     clear Name Number Actin_file Image_actin Path  Image_borders
     Name = files(loop).name;
     Number = sscanf(Name, '%f');
-    Actin_file = [num2str(Number),'_actin.tif'];
+    Actin_file = [num2str(Number),'.tif'];
     Image_actin = imread(Actin_file);
     cd('../');
-    Path = ['borders/', num2str(Number),'_borders/'];
+    Path = ['borders/', num2str(Number),'/'];
     cd(Path);
     Image_borders = imread('tracked_bd.png');
     cd('../../');

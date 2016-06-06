@@ -33,11 +33,11 @@
     for i=6:numel(im_cells_data);
         if im_cells_data(i).Area > 200;
             cell_counter = cell_counter + 1;
-            cell_data(cell_counter,1) = cell_counter;
-            cell_data(cell_counter,2) = im_cells_data(i).Area;
-            cell_data(cell_counter,3) = im_cells_data(i).Eccentricity;
-            cell_data(cell_counter,4) = im_cells_data(i).Orientation;
             cell_filteredcounter = cell_filteredcounter + 1;
+            cell_data(cell_filteredcounter,1) = cell_counter;
+            cell_data(cell_filteredcounter,2) = im_cells_data(i).Area;
+            cell_data(cell_filteredcounter,3) = im_cells_data(i).Eccentricity;
+            cell_data(cell_filteredcounter,4) = im_cells_data(i).Orientation;
             good_cell(cell_filteredcounter)=i;
             b_valid(cell_filteredcounter) = B(i);
         end
@@ -129,7 +129,8 @@
                 num_pixvalues_back_c = num_pixvalues_back_c + 1;
             end
         end
-        mts_density(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
+        mts_density(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / ...
+            (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
         mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
         
         %Apply Sobel Filter over a MTs image to test it
@@ -186,7 +187,7 @@
             end;
         end;
         
-       % Sortin by angle and shifting to -90 to 90
+       % Sorting by angle and shifting to -90 to 90
         clear mxd_sorted mxd_shifted m_added total
         mxd_sorted = sortrows(mxd_corrected,1);
         mxd_shifted = [mxd_sorted(:,1) - 90, mxd_sorted(:,2)]; %To place the values between [-90 90]
@@ -204,9 +205,7 @@
         bin_size = 4;
         binrange = [-90 : bin_size : 90];
         [N, bins] = histc(mxd_shifted(:,1),binrange);
-        for i=1:(length(binrange)-1)
-            bincenter(i)=binrange(i) + bin_size/2;
-        end
+        bincenter=binrange(1:(end-1)) + bin_size/2;
         
         for ii = 1 : r;    
             mxd_indexed(ii,2) = mxd_shifted(ii,2);
