@@ -82,9 +82,11 @@ for loop=1:length(files);
         end
     end
     summary(:,9) = mts_area';
+    summary(:, 10) = 1./sqrt(1-cell_data(:,3).*cell_data(:,3));
+    summary(:,11) = 100*(erf(10./SD'/sqrt(2))-erf(-10./SD'/sqrt(2)))/2;
     
     summary_filename = [num2str(Number),'_summary.csv'];
-    headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area'};
+    headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment'};
     cd(sum_dir);
     csvwrite_with_headers(summary_filename,summary,headers);
     close all
