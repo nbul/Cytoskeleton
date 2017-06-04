@@ -109,7 +109,6 @@ result = struct([]);
 m_added_norm = zeros(45,numel(b_valid)+1);
 mts_density = zeros(1, numel(b_valid));
 mts_area = zeros(1, numel(b_valid));
-Spars = zeros(1, numel(b_valid));
 %%  Conduct cell-by-cell analysis.
 for k = 1:numel(b_valid);
     
@@ -143,7 +142,7 @@ for k = 1:numel(b_valid);
     mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
     
     to_analyse_o{k}.PixelValues(to_analyse_o{k}.PixelValues==0)=[];
-    Spars(k) = calcSparseness(to_analyse_o{k}.PixelValues,1);
+    Spars
     
     %Apply Sobel Filter over a MTs image to test it
     clear H_full V_full H V M D_radians pp qq x y

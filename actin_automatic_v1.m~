@@ -89,30 +89,33 @@ for loop=1:length(files);
     summary(:,12) = Spars';
     
     summary_filename = [num2str(Number),'_summary.csv'];
-    headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment', 'Sparseness'};
+    headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment'};
     cd(sum_dir);
     csvwrite_with_headers(summary_filename,summary,headers);
     
     
     Averages(loop,1) = loop;
-    Averages(loop,2) = sum(mts_density)/length(SD);
-    Averages(loop,3) = sum(SD)/length(SD);
-    Averages(loop,4) = sum(mu)/length(SD);
-    Averages(loop,5) = sum(cell_data(:,2))/length(SD);
-    Averages(loop,6) = sum(cell_data(:,3))/length(SD);
-    Averages(loop,7) = sum(cell_data(:,4))/length(SD);
-    Averages(loop,8) = sum(summary(:, 8))/length(SD);
-    Averages(loop,9) = sum(mts_area)/length(SD);
-    Averages(loop, 10) = sum(summary(:, 10))/length(SD);
-    Averages(loop,11) = sum(summary(:, 11))/length(SD);
-    Averages(loop,12) = sum(summary(:, 12))/length(SD);
+    summary(loop,2) = sum(mts_density')/length(SD);
+    summary(:,3) = SD';
+    summary(:,4) = mu';
+    summary(:,5) = cell_data(:,2);
+    summary(:,6) = cell_data(:,3);
+    summary(:,7) = cell_data(:,4);
+    for counter2 = 1:length(SD)
+        if (abs(summary(counter2, 4)-summary(counter2, 7)) >= 90)
+            summary(counter2, 8) = 180 - abs(summary(counter2, 4)-summary(counter2, 7));
+        else
+            summary(counter2, 8) = abs(summary(counter2, 4)-summary(counter2, 7));
+        end
+    end
+    summary(:,9) = mts_area';
+    summary(:, 10) = 1./sqrt(1-cell_data(:,3).*cell_data(:,3));
+    summary(:,11) = 100*(erf(10./SD'/sqrt(2))-erf(-10./SD'/sqrt(2)))/2;
+    summary(:,12) = Spars';
     
     close all
 end
-summary_filename = ['Summary_all.csv'];
-headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment','Sperseness'};
-cd(sum_dir);
-csvwrite_with_headers(summary_filename,Averages,headers);
+
 cd(currdir);
 
 clc
