@@ -142,8 +142,8 @@ for k = 1:numel(b_valid);
         (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
     mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
     
-    to_analyse_o{k}.PixelValues(to_analyse_o{k}.PixelValues==0)=[];
-    Spars(k) = calcSparseness(to_analyse_o{k}.PixelValues,1);
+    to_analyse_c{k}.PixelValues(to_analyse_c{k}.PixelValues==0)=[];
+    Spars(k) = calcSparseness(to_analyse_c{k}.PixelValues,1);
     
     %Apply Sobel Filter over a MTs image to test it
     clear H_full V_full H V M D_radians pp qq x y

@@ -30,7 +30,7 @@ files = dir('*.tif');
 cd(currdir);
 
 
-Averages = zeros(length(files),12);
+Averages = zeros(length(files),23);
 %% Parameters
 bin_size = 4;
 binrange = -90 : bin_size : 90;
@@ -95,22 +95,45 @@ for loop=1:length(files);
     
     
     Averages(loop,1) = loop;
-    Averages(loop,2) = sum(mts_density)/length(SD);
-    Averages(loop,3) = sum(SD)/length(SD);
-    Averages(loop,4) = sum(mu)/length(SD);
-    Averages(loop,5) = sum(cell_data(:,2))/length(SD);
-    Averages(loop,6) = sum(cell_data(:,3))/length(SD);
-    Averages(loop,7) = sum(cell_data(:,4))/length(SD);
-    Averages(loop,8) = sum(summary(:, 8))/length(SD);
-    Averages(loop,9) = sum(mts_area)/length(SD);
-    Averages(loop, 10) = sum(summary(:, 10))/length(SD);
-    Averages(loop,11) = sum(summary(:, 11))/length(SD);
-    Averages(loop,12) = sum(summary(:, 12))/length(SD);
-    
+    % Density
+    Averages(loop,2) = nanmean(mts_density);
+    Averages(loop,3) = var(mts_density(~isnan(mts_density)))/sqrt(length(mts_density(~isnan(mts_density)))-1);
+    %SD
+    Averages(loop,4) = mean(SD);
+    Averages(loop,5) = var(SD)/sqrt(length(SD)-1);
+    %Direction cytoskeleton
+    Averages(loop,6) = mean(mu);
+    Averages(loop,7) = var(mu)/sqrt(length(SD)-1);
+    %Area
+    Averages(loop,8) = mean(cell_data(:,2));
+    Averages(loop,9) = var(cell_data(:,2))/sqrt(length(SD)-1);
+    % Eccentricity
+    Averages(loop,10) = mean(cell_data(:,3));
+    Averages(loop,11) = var(cell_data(:,3))/sqrt(length(SD)-1);
+    % Direction_cell
+    Averages(loop,12) = mean(cell_data(:,4));
+    Averages(loop,13) = var(cell_data(:,4))/sqrt(length(SD)-1);
+    %DEV
+    Averages(loop,14) = mean(summary(:, 8));
+    Averages(loop,15) = var(summary(:, 8))/sqrt(length(SD)-1);
+    %Signal area
+    Averages(loop,16) = mean(mts_area);
+    Averages(loop,17) = var(mts_area)/sqrt(length(SD)-1);
+    %Aspect ratio
+    Averages(loop, 18) = mean(summary(:, 10));
+    Averages(loop,19) = var(summary(:, 10))/sqrt(length(SD)-1);
+    %Alignment
+    Averages(loop,20) = mean(summary(:, 11));
+    Averages(loop,21) = var(summary(:, 11))/sqrt(length(SD)-1);
+    %Sparseness
+    Averages(loop,22) = nansum(summary(:, 12))/length(SD);
+    Averages(loop,23) = var(summary(~isnan(summary(:, 12)), 12))/sqrt(length(summary(~isnan(summary(:, 12)), 12))-1);
     close all
 end
-summary_filename = ['Summary_all.csv'];
-headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment','Sperseness'};
+summary_filename = 'Summary_all.csv';
+headers = {'Cell', 'Density', 'sem', 'SD', 'sem', 'Direction_cytoskeleton','sem', 'Area','sem', ...
+    'Eccentricity','sem', 'Direction_cell','sem', 'DEV','sem', 'Signal Area','sem',...
+    'Aspect ratio','sem', 'Alignment','sem', 'Sperseness','sem'};
 cd(sum_dir);
 csvwrite_with_headers(summary_filename,Averages,headers);
 cd(currdir);
