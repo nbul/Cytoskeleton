@@ -21,9 +21,11 @@ summary(:,9) = mts_area';
 summary(:, 10) = 1./sqrt(1-cell_data(:,4).*cell_data(:,4));
 summary(:,11) = 100*(erf(10./SD'/sqrt(2))-erf(-10./SD'/sqrt(2)))/2;
 summary(:,12) = Spars';
+summary(:,13) = mts_bundling';
 
 summary_filename = [num2str(Number),'_summary.csv'];
-headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity', 'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment', 'Sparseness'};
+headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity',...
+    'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment', 'Sparseness','Bundling'};
 cd(sum_dir);
 csvwrite_with_headers(summary_filename,summary,headers);
 
@@ -31,10 +33,10 @@ csvwrite_with_headers(summary_filename,summary,headers);
 Averages(loop,1) = Number;
 % Density
 Averages(loop,2) = nanmean(mts_density);
-Averages(loop,3) = sqrt(var(mts_density(~isnan(mts_density)))/(length(mts_density(~isnan(mts_density)))-1));
+Averages(loop,3) = sqrt(var(mts_density(~isnan(mts_density)))/length(mts_density(~isnan(mts_density))));
 %SD
 Averages(loop,4) = mean(SD);
-Averages(loop,5) = sqrt(var(SD)/(length(SD)-1));
+Averages(loop,5) = sqrt(var(SD)/length(SD));
 %Direction cytoskeleton
 Averages(loop,6) = mean(mu);
 Averages(loop,7) = sqrt(var(mu)/length(SD));
@@ -63,5 +65,10 @@ Averages(loop,21) = sqrt(var(summary(:, 11))/length(SD));
 Averages(loop,22) = nansum(summary(:, 12))/length(SD);
 Averages(loop,23) = sqrt(var(summary(~isnan(summary(:, 12)), 12))/...
     length(summary(~isnan(summary(:, 12)), 12)));
+%Bundling
+%SD
+Averages(loop,24) = mean(summary(:,13));
+Averages(loop,25) = sqrt(var(summary(:,13))/length(SD));
+
 %number of cells
-Averages(loop,24) = length(SD);
+Averages(loop,26) = length(SD);

@@ -4,6 +4,7 @@ to_analyse_back_o = struct([]);
 
 mts_density = zeros(1, numel(b_valid));
 mts_area = zeros(1, numel(b_valid));
+mts_bundling = zeros(1, numel(b_valid));
 Spars = zeros(1, numel(b_valid));
 
 for k = 1:numel(b_valid);
@@ -25,5 +26,14 @@ for k = 1:numel(b_valid);
         (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
     mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
     
+    if max(to_analyse_c.PixelValues)~= 0
+        mts_bundling(k) = mean(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))...
+            /min(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
+    else
+        mts_bundling(k) = 0;
+    end
+    
     Spars(k) = calcSparseness(to_analyse_c.PixelValues,1);
 end
+
+%min(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))

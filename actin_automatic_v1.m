@@ -73,7 +73,7 @@ Averages = sortrows(Averages,1);
 summary_filename = 'Summary_all.csv';
 headers = {'Cell', 'Density', 'sem', 'SD', 'sem', 'Direction_cytoskeleton','sem', 'Area','sem', ...
     'Eccentricity','sem', 'Direction_cell','sem', 'DEV','sem', 'Signal Area','sem',...
-    'Aspect ratio','sem', 'Alignment','sem', 'Sperseness','sem', 'Cell number'};
+    'Aspect ratio','sem', 'Alignment','sem', 'Sperseness','sem','Bundling','sem', 'Cell number'};
 cd(sum_dir);
 csvwrite_with_headers(summary_filename,Averages,headers);
 cd(currdir);
