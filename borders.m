@@ -12,7 +12,8 @@ b_valid = cell(0);
 cell_counter = 0;
 for i=1:numel(im_cells_data);
     if im_cells_data(i).Area > 200 && ...
-            max(im_cells_data(i).PixelList(:,1))-(min(im_cells_data(i).PixelList(:,1)))<im_x/2;
+            max(im_cells_data(i).PixelList(:,1))-(min(im_cells_data(i).PixelList(:,1)))<im_x/2 &&...
+            max(im_cells_data(i).PixelList(:,2))-(min(im_cells_data(i).PixelList(:,2)))<im_y/2;
         cell_counter = cell_counter + 1;
         cell_data(cell_counter,1) = cell_counter;
         cell_data(cell_counter,2) = i;

@@ -2,7 +2,6 @@ clear object_double
 
 %%  Assign memory.
 
-result = struct([]);
 m_added_norm = zeros(45,numel(b_valid)+1);
 m_added_norm(:,1) = bincenter;
 
@@ -11,9 +10,10 @@ for k = 1:numel(b_valid);
     
     %Apply Sobel Filter over a MTs image to test it
     clear H_full V_full H V M D x y mxd_thr mxd_corrected mxd_indexed
-    object_double = im2double(poly2mask(b_valid{k}(:,2),b_valid{k}(:,1),im_x,im_y));
-    H_full = conv2(image_original_double .* object_double,Gx);
-    V_full = conv2(image_original_double .* object_double,Gy);
+    object_double = image_original_double .*...
+        im2double(poly2mask(b_valid{k}(:,2),b_valid{k}(:,1),im_x,im_y));
+    H_full = conv2(object_double,Gx);
+    V_full = conv2(object_double,Gy);
     H = H_full(5:im_x,5:im_y);
     V = V_full(5:im_x,5:im_y);
     M = sqrt(H.^2 + V.^2);
@@ -34,7 +34,6 @@ for k = 1:numel(b_valid);
             end;
         end;
     end;
-    mxd(mxd(:,2)==0,:) = [];
     max_mxd  = max(mxd(:,2)); %maximum magnitude
     mxd_thr = mxd./repmat([1,max_mxd], length(mxd), 1); %normalised to max magnitude
     
