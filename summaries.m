@@ -1,6 +1,6 @@
 %% Writing down summarised data
 
-summary = zeros(length(SD),12);
+summary = zeros(length(SD),14);
 for counter2 = 1:length(SD)
     summary(counter2,1) = counter2;
 end
@@ -22,10 +22,13 @@ summary(:, 10) = 1./sqrt(1-cell_data(:,4).*cell_data(:,4));
 summary(:,11) = 100*(erf(10./SD'/sqrt(2))-erf(-10./SD'/sqrt(2)))/2;
 summary(:,12) = Spars';
 summary(:,13) = mts_bundling';
+summary(:,14) = Uniformity';
+
 
 summary_filename = [num2str(Number),'_summary.csv'];
 headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity',...
-    'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment', 'Sparseness','Bundling'};
+    'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment', 'Sparseness',...
+    'Bundling','Uniformity'};
 cd(sum_dir);
 csvwrite_with_headers(summary_filename,summary,headers);
 
@@ -66,9 +69,12 @@ Averages(loop,22) = nansum(summary(:, 12))/length(SD);
 Averages(loop,23) = sqrt(var(summary(~isnan(summary(:, 12)), 12))/...
     length(summary(~isnan(summary(:, 12)), 12)));
 %Bundling
-%SD
 Averages(loop,24) = mean(summary(:,13));
 Averages(loop,25) = sqrt(var(summary(:,13))/length(SD));
 
+%Uniformity
+Averages(loop,26) = mean(summary(:,14));
+Averages(loop,27) = sqrt(var(summary(:,14))/length(SD));
+
 %number of cells
-Averages(loop,26) = length(SD);
+Averages(loop,28) = length(SD);

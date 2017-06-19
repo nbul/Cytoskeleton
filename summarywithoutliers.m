@@ -13,7 +13,7 @@ ck_dir =[filedir, '/summary/outliers'];
 cd(ck_dir);
 files = dir('*.csv');
 cd(currdir);
-Averages = zeros(length(files),24);
+Averages = zeros(length(files),28);
 for i=1:numel(files)
     cd(ck_dir);
     Name = files(i).name;
@@ -56,15 +56,22 @@ for i=1:numel(files)
     Averages(i,22) = nanmean(Data(:,12));
     Averages(i,23) = sqrt(var(Data(~isnan(Data(:,12)), 12))/...
         length(Data(~isnan(Data(:,12)), 12)));
+    %Bundling
+    Averages(i,24) = mean(Data(:,13));
+    Averages(i,25) = sqrt(var(Data(:,13))/length(Data(:,13)));
+    %Bundling
+    Averages(i,26) = mean(Data(:,14));
+    Averages(i,27) = sqrt(var(Data(:,14))/length(Data(:,13)));
+    
     %number of cells
-    Averages(i,24) = length(Data(:,2));
-    close all
+    Averages(i,28) = length(Data(:,11));
 end
 Averages = sortrows(Averages,1);
 summary_filename = 'Summary_all_clean.csv';
-headers = {'Cell', 'Density', 'sem', 'SD', 'sem', 'Direction_cytoskeleton','sem', 'Area','sem', ...
+headers = {'Embryo', 'Density', 'sem', 'SD', 'sem', 'Direction_cytoskeleton','sem', 'Area','sem', ...
     'Eccentricity','sem', 'Direction_cell','sem', 'DEV','sem', 'Signal Area','sem',...
-    'Aspect ratio','sem', 'Alignment','sem', 'Sperseness','sem', 'Cell number'};
+    'Aspect ratio','sem', 'Alignment','sem', 'Sparseness','sem','Bundling' ,'sem',...
+    'Uniformity','sem','Cell number'};
 csvwrite_with_headers(summary_filename,Averages,headers);
 cd(currdir);
 
