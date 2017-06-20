@@ -10,7 +10,7 @@ for k = 1:numel(b_valid);
     
     %Apply Sobel Filter over a MTs image to test it
     clear H_full V_full H V M D x y mxd_thr mxd_corrected mxd_indexed
-    object_double = image_original_double .*...
+    object_double = image_original_double_MTSD .*...
         im2double(poly2mask(b_valid{k}(:,2),b_valid{k}(:,1),im_x,im_y));
     H_full = conv2(object_double,Gx);
     V_full = conv2(object_double,Gy);

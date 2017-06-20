@@ -12,7 +12,8 @@ addpath(pwd);
 filedir = uigetdir();
 cd(filedir);
 %Folders with images
-ck_dir =[filedir, '/cytoskeleton']; 
+ck_dir =[filedir, '/cytoskeleton'];
+dens_dir =[filedir, '/cytoskeleton_average'];
 b_dir = [filedir, '/borders'];
 
 %Folder to save information about cells
@@ -46,6 +47,8 @@ for loop=1:length(files);
     Number = sscanf(Name, '%f');
     Actin_file = [num2str(Number),'.tif'];
     Image = imread(Actin_file);
+    cd(dens_dir);
+    Image2 = imread(Actin_file);
     cd(b_dir);
     Path = [b_dir, '/', num2str(Number),'/'];
     cd(Path);

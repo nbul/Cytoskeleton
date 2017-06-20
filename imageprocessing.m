@@ -1,7 +1,8 @@
 %% Open MTs image. Adjust image to optimal settings.
 
-imcorrected = Image - imopen(Image,strel('disk',40)); % background subtraction
-image_original_double = im2double(Image); % original into double
+imcorrected = Image2 - imopen(Image2,strel('disk',40)); % background subtraction
+image_original_double = im2double(Image2); % original into double
+image_original_double_MTSD = im2double(Image);
 
 %% Processed Image for Density Analysis
 image_adjusted = imadjust(imcorrected); %adjusting intensity
