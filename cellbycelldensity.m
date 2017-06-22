@@ -13,8 +13,12 @@ mts_bundling = zeros(1, numel(b_valid));
 
 %% Processed Image for Density Analysis
 image_original_double = im2double(Image2); % original into double
-levels_density = (graythresh(image_original_double))*1; % treshold value
-im_bin_c = im2bw(image_original_double,levels_density); % thresholding adjusted image
+image_edges = edge(Image2, 'Canny');
+signal_edges = image_original_double .* image_edges;
+[parmhat,parmci] = lognfit(signal_edges(signal_edges>0));
+threshold = exp(parmhat(1)-parmhat(2)*parmhat(2));
+%threshold2 = adaptthresh(Image2);
+im_bin_c = imbinarize(image_original_double,threshold*0.7);
 
 %% Generate Cell Masks.
 signal_original = image_original_double .* im_bin_c;
@@ -41,8 +45,8 @@ for k = 1:numel(b_valid);
     mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
     
     if max(to_analyse_c.PixelValues)~= 0
-        mts_bundling(k) = mean(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))...
-            /min(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
+        mts_bundling(k) = mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))...
+            /min(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
     else
         mts_bundling(k) = 0;
     end
