@@ -1,5 +1,5 @@
 clear object_double  
-
+image_original_double_MTSD = im2double(Image);
 %%  Assign memory.
 
 m_added_norm = zeros(45,numel(b_valid)+1);

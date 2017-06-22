@@ -1,3 +1,5 @@
+%% Preallocate memory
+
 to_analyse_o = struct([]);
 to_analyse_c = struct([]);
 to_analyse_all = struct([]);
@@ -9,12 +11,21 @@ Uniformity = zeros(1, numel(b_valid));
 Spars = zeros(1, numel(b_valid));
 mts_bundling = zeros(1, numel(b_valid));
 
+%% Processed Image for Density Analysis
+image_original_double = im2double(Image2); % original into double
+levels_density = (graythresh(image_original_double))*1; % treshold value
+im_bin_c = im2bw(image_original_double,levels_density); % thresholding adjusted image
+
+%% Generate Cell Masks.
+signal_original = image_original_double .* im_bin_c;
+background_original = image_original_double .* (ones(im_x,im_y) - im_bin_c);
+
 for k = 1:numel(b_valid);
     clear selected_signal
     % Density data from signal and background
     selected_signal = poly2mask(b_valid{k}(:,2),b_valid{k}(:,1),im_x,im_y);
     to_analyse_o = regionprops(selected_signal, signal_original,'PixelValues');
-    to_analyse_c = regionprops(selected_signal, signal_corrected,'PixelValues');
+    to_analyse_c = regionprops(selected_signal, im_bin_c,'PixelValues');
     to_analyse_back_o = regionprops(selected_signal, background_original,'PixelValues');
     to_analyse_all = regionprops(selected_signal, image_original_double,'PixelValues');
     
