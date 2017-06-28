@@ -12,7 +12,7 @@ Spars = zeros(1, numel(b_valid));
 mts_bundling = zeros(1, numel(b_valid));
 
 %% Processed Image for Density Analysis
-image_original_double = im2double(Image2); % original into double
+image_original_double = double(im2uint16(Image2)); % original into double
 image_edges = edge(Image2, 'Canny');
 signal_edges = image_original_double .* image_edges;
 [parmhat,parmci] = lognfit(signal_edges(signal_edges>0));
@@ -42,19 +42,24 @@ for k = 1:numel(b_valid);
     
     mts_density(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / ...
         (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
-    mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);
+    mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);   
     
     if max(to_analyse_c.PixelValues)~= 0
-        mts_bundling(k) = mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))...
-            /min(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
+        mts_bundling(k) = (mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))-...
+            (0.7*mean(signal_edges(signal_edges>0)))) / ...
+            (0.7*mean(signal_edges(signal_edges>0)));
+%         mts_bundling(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / ...
+%             (sum_pixvalues_back_o / num_pixvalues_back_c));
+        %         mts_bundling(k) = mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))...
+        %             /min(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
     else
         mts_bundling(k) = 0;
     end
     
     Uniformity(k) = 100 * (1 - sum(abs(to_analyse_all.PixelValues - mean(to_analyse_all.PixelValues))./...
         (to_analyse_all.PixelValues + mean(to_analyse_all.PixelValues)))/length(to_analyse_all.PixelValues));
-   
+    
     Spars(k) = calcSparseness(to_analyse_c.PixelValues,1);
 end
 
-%min(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))
+%min(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))  'Loglogistic'
