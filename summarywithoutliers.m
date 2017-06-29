@@ -8,6 +8,7 @@ filedir = uigetdir();
 cd(filedir);
 %Folders with images
 ck_dir =[filedir, '/summary/outliers']; 
+Data_all = zeros(1,14);
 
 %% Number of files to analyse
 cd(ck_dir);
@@ -20,6 +21,8 @@ for i=1:numel(files)
     Number = sscanf(Name, '%f');
     Data_name = [num2str(Number),'_summary.csv'];
     Data = csvread(Data_name,1,0);
+    temp = Data_all;
+    Data_all = [temp; Data];
     
     Averages(i,1) = Number;
     % Density
@@ -73,8 +76,16 @@ headers = {'Cell', 'Density', 'sem', 'SD', 'sem', 'Direction_cytoskeleton','sem'
     'Aspect ratio','sem', 'Alignment','sem', 'Sparseness','sem','Bundling','sem',...
     'Uniformity','sem','Cell number'};
 csvwrite_with_headers(summary_filename,Averages,headers);
-cd(currdir);
 
+
+Data_all(1,:) = [];
+Data_all = sortrows(Data_all,6);
+Data_all_filename = 'All_data.csv';
+headers = {'Cell', 'Density', 'SD', 'Direction_cytoskeleton','Area', 'Eccentricity',...
+    'Dorection_cell','DEV', 'Signal Area','Aspect ratio','Alignment', 'Sparseness',...
+    'Bundling','Uniformity'};
+csvwrite_with_headers(Data_all_filename,Data_all,headers);
+cd(currdir);
 clc
 clear variables
 close all
