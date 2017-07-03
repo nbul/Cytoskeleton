@@ -19,7 +19,7 @@ for i=1:numel(files)
     cd(ck_dir);
     Name = files(i).name;
     Number = sscanf(Name, '%f');
-    Data_name = [num2str(Number),'_summary.csv'];
+    Data_name = [num2str(Number),'_summary_2.csv'];
     Data = csvread(Data_name,1,0);
     temp = Data_all;
     Data_all = [temp; Data];

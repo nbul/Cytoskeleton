@@ -1,7 +1,7 @@
 %% Collect data about cells and boundaries
 
 clear image_borders checknumbers borders_bin B L b_valid
-borders_bin = im2bw(Image_borders,0);
+borders_bin = imbinarize(rgb2gray(Image_borders),0);
 [B,L] = bwboundaries(borders_bin,'holes');
 
 im_cells_data=regionprops(L,'Centroid', 'Area', 'Eccentricity','PixelList','Orientation');
@@ -10,10 +10,10 @@ im_cells_data=regionprops(L,'Centroid', 'Area', 'Eccentricity','PixelList','Orie
 cell_data = zeros(1, 4);
 b_valid = cell(0);
 cell_counter = 0;
-for i=1:numel(im_cells_data);
+for i=1:numel(im_cells_data)
     if im_cells_data(i).Area > 1000 && ...
             max(im_cells_data(i).PixelList(:,1))-(min(im_cells_data(i).PixelList(:,1)))<im_x/2 &&...
-            max(im_cells_data(i).PixelList(:,2))-(min(im_cells_data(i).PixelList(:,2)))<im_y/2;
+            max(im_cells_data(i).PixelList(:,2))-(min(im_cells_data(i).PixelList(:,2)))<im_y/2
         cell_counter = cell_counter + 1;
         cell_data(cell_counter,1) = cell_counter;
         cell_data(cell_counter,2) = i;
@@ -23,3 +23,5 @@ for i=1:numel(im_cells_data);
         b_valid(cell_counter) = B(i);
     end
 end
+
+cell_data(cell_data(:,5)<0,5) = cell_data(cell_data(:,5)<0,5) + 180;

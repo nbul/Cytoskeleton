@@ -15,14 +15,14 @@ x = x /90 * pi;
 bin = 0.14;
 
 %% Von Mises Fit
-for fit=2:counter(2)
-y_forfit = y_forfit1(:,fit);
+for i=2:counter(2)
+y_forfit = y_forfit1(:,i);
 y = y_forfit;
-kappa(fit-1) = circ_kappa(x,y,bin);
-SD(fit-1) = sqrt(1/kappa(fit-1)) * (180/pi) * stretch_factor;
-mu(fit-1) = circ_mean(x,y);
-[p, alpha] = circ_vmpdf(x,mu(fit-1),kappa(fit-1));
-mu(fit-1) = mu(fit-1) * (180/pi) * stretch_factor;
+kappa(i-1) = circ_kappa(x,y,bin);
+SD(i-1) = sqrt(1/kappa(i-1)) * (180/pi) * stretch_factor;
+mu(i-1) = circ_mean(x,y);
+[p, alpha] = circ_vmpdf(x,mu(i-1),kappa(i-1));
+mu(i-1) = mu(i-1) * (180/pi) * stretch_factor;
 end
 
 
