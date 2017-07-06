@@ -69,13 +69,14 @@ else
     % Kurtosis
     summary(:,8) = kurt';
     % outlier removal
-    outlier_2 = isoutlier(summary(:,2), 'median');
-    outlier_3 = outlier_2 + isoutlier(summary(:,3), 'median');
-    outlier_4 = outlier_3 + isoutlier(summary(:,4), 'median');
-    outlier_5 = outlier_4 + isoutlier(summary(:,5), 'median');
-    outlier_6 = outlier_5 + isoutlier(summary(:,6), 'median');
-    outlier_7 = outlier_6 + isoutlier(summary(:,7), 'median');
-    outlier_8 = outlier_7 + isoutlier(summary(:,8), 'median');
+%     outlier_2 = isoutlier(summary(:,2), 'median');
+%     outlier_3 = outlier_2 + isoutlier(summary(:,3), 'median');
+%     outlier_4 = outlier_3 + isoutlier(summary(:,4), 'median');
+%     outlier_5 = outlier_4 + isoutlier(summary(:,5), 'median');
+%     outlier_6 = outlier_5 + isoutlier(summary(:,6), 'median');
+%     outlier_7 = outlier_6 + isoutlier(summary(:,7), 'median');
+%     outlier_8 = outlier_7 + isoutlier(summary(:,8), 'median');
+    outlier_8 = isoutlier(cell_data(:,3), 'median');
     outlier_number = length(outlier_8(outlier_8 ~= 0));
     summary(outlier_8 ~= 0,:) = [];
     summary(isnan(summary(:,3)) == 1,:) = [];

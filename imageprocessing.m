@@ -2,7 +2,7 @@
 image1=figure;
 imshow(imadjust(Image2)), title('Adjusted MTs Image');
 hold on;
-for k = 1:length(b_valid);
+for k = 1:length(b_valid)
     clear boundary_valid
     boundary = b_valid{k};
     c = im_cells_data(cell_data(k,2)).Centroid;
@@ -10,7 +10,7 @@ for k = 1:length(b_valid);
         'VerticalAlignment', 'middle', 'Fontsize', 10);
     set(c_labels,'Color',[1 1 0])
     plot(boundary(:,2), boundary(:,1), 'r', 'LineWidth', 2);
-end;
+end
 
 %% Saving the image
 cd(im_dir);
