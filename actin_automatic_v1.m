@@ -17,23 +17,21 @@ dens_dir =[filedir, '/cytoskeleton_average'];
 b_dir = [filedir, '/borders'];
 
 %Folder to save information about cells
-mkdir(filedir,'/distribution');
+if exist([filedir, '/distribution'],'dir') == 0
+    mkdir(filedir,'/distribution');
+end
 dist_dir = [filedir, '/distribution'];
 
-mkdir(filedir,'/images_analysed');
+if exist([filedir,'/images_analysed'],'dir') == 0
+    mkdir(filedir,'/images_analysed');
+end
 im_dir = [filedir, '/images_analysed'];
 
-mkdir(filedir,'/summary');
+if exist([filedir,'/summary'],'dir') == 0
+    mkdir(filedir,'/summary');
+end
 sum_dir = [filedir, '/summary'];
 
-mkdir(filedir,'/summary/otsu');
-otsu_dir = [filedir, '/summary/otsu'];
-
-mkdir(filedir,'/summary/edges');
-edges_dir = [filedir, '/summary/edges'];
-
-mkdir(filedir,'/summary/MTSD');
-MTSD_dir = [filedir, '/summary/MTSD'];
 
 %% Determining mode and method
 method = 1;
@@ -60,14 +58,26 @@ if path ==1
     headers = {'Embryo', 'Area','sem',  'Eccentricity','sem', 'Direction_cell','sem',...
         'SD', 'sem', 'Direction_cytoskeleton','sem', 'Aspect ratio','sem', 'Alignment','sem','Cell number','Outliers'};
     Averages_filename = 'Summary_MTSD.csv';
+    if exist([filedir,'/summary/MTSD'],'dir') == 0
+        mkdir(filedir,'/summary/MTSD');
+    end
+    result_dir = [filedir, '/summary/MTSD'];
 else
-     Averages = zeros(length(files),17);
-     headers = {'Embryo', 'Signal area', 'sem','Density','sem','Bundling','sem', 'Uniformity','sem', ...
-         'Sparseness','sem', 'Skewness','sem', 'Kurtosis','sem','Cell number','Outliers'};
-     if method == 1
-         Averages_filename = 'Summary_edges.csv';
+    Averages = zeros(length(files),17);
+    headers = {'Embryo', 'Signal area', 'sem','Density','sem','Bundling','sem', 'Uniformity','sem', ...
+        'Sparseness','sem', 'Skewness','sem', 'Kurtosis','sem','Cell number','Outliers'};
+    if method == 1
+        Averages_filename = 'Summary_edges.csv';
+         if exist([filedir,'/summary/edges'],'dir') == 0
+             mkdir(filedir,'/summary/edges');
+         end
+         result_dir = [filedir, '/summary/edges'];
      else
          Averages_filename = 'Summary_otsu.csv';
+         if exist([filedir,'/summary/otsu'],'dir') == 0
+             mkdir(filedir,'/summary/otsu');
+         end
+         result_dir = [filedir, '/summary/otsu'];
      end
 end
 %% Parameters

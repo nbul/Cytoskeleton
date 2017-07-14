@@ -1,12 +1,12 @@
 %% Writing down summarised data MTSD
 
-
+cd(result_dir);
 if path==1
     summary = zeros(length(SD),8);
     for counter2 = 1:length(SD)
         summary(counter2,1) = counter2;
     end
-    summary(:,2) = cell_data(:,3); % cell area 
+    summary(:,2) = cell_data(:,3); % cell area
     summary(:,3) = cell_data(:,4); % eccentricity
     summary(:,4) = cell_data(:,5); % cell orientation
     summary(:,5) = SD';
@@ -22,9 +22,7 @@ if path==1
     summary_filename = [num2str(Number),'_summary_MTSD.csv'];
     headers2 = {'Cell', 'Area', 'Eccentricity','Direction_cell', ...
         'SD', 'DEV', 'Elongation', 'Alignment'};
-        cd(MTSD_dir);
     csvwrite_with_headers(summary_filename,summary,headers2);
-    cd(currdir);
     Averages(loop,1) = Number;
     % cell area
     Averages(loop,2) = mean(summary(:,2));
@@ -69,13 +67,13 @@ else
     % Kurtosis
     summary(:,8) = kurt';
     % outlier removal
-%     outlier_2 = isoutlier(summary(:,2), 'median');
-%     outlier_3 = outlier_2 + isoutlier(summary(:,3), 'median');
-%     outlier_4 = outlier_3 + isoutlier(summary(:,4), 'median');
-%     outlier_5 = outlier_4 + isoutlier(summary(:,5), 'median');
-%     outlier_6 = outlier_5 + isoutlier(summary(:,6), 'median');
-%     outlier_7 = outlier_6 + isoutlier(summary(:,7), 'median');
-%     outlier_8 = outlier_7 + isoutlier(summary(:,8), 'median');
+    %     outlier_2 = isoutlier(summary(:,2), 'median');
+    %     outlier_3 = outlier_2 + isoutlier(summary(:,3), 'median');
+    %     outlier_4 = outlier_3 + isoutlier(summary(:,4), 'median');
+    %     outlier_5 = outlier_4 + isoutlier(summary(:,5), 'median');
+    %     outlier_6 = outlier_5 + isoutlier(summary(:,6), 'median');
+    %     outlier_7 = outlier_6 + isoutlier(summary(:,7), 'median');
+    %     outlier_8 = outlier_7 + isoutlier(summary(:,8), 'median');
     outlier_8 = isoutlier(cell_data(:,3), 'median');
     outlier_number = length(outlier_8(outlier_8 ~= 0));
     summary(outlier_8 ~= 0,:) = [];
@@ -83,15 +81,11 @@ else
     headers2 = {'Cell', 'Signal area', 'Density','Bundling', 'Uniformity', ...
         'Sparseness', 'Skewness', 'Kurtosis'};
     if method == 1
-        cd(edges_dir);
         summary_filename = [num2str(Number),'_summary_edge.csv'];
         csvwrite_with_headers(summary_filename,summary,headers2);
-        cd(currdir);
     else
-        cd(otsu_dir);
         summary_filename = [num2str(Number),'_summary_otsu.csv'];
         csvwrite_with_headers(summary_filename,summary,headers2);
-        cd(currdir);
     end
     Averages(loop,1) = Number;
     % Signal area
@@ -118,3 +112,4 @@ else
     Averages(loop,16) = length(summary(:,1));
     Averages(loop,17) = outlier_number;
 end
+cd(currdir);
