@@ -22,7 +22,7 @@ Images should be numbered, but the numbers do not have to be sequencial, and the
 
 1. In case you select density, choose the threshold method: Otsu's method with a threshold calculated on an adjusted image (*Otsu*), or calculating a threshold from intensity of edges detected in an image (*Edges*).
 
-## Output
+## Output files and format
 
 The following folders will be automatically created depending on the selection at the start of a run.
 1. **distribution** with cell-by-cell signal direction distributions for each image (* **image number**_distribution.csv*) in case *MTSD* option for analysis is selected.
@@ -31,3 +31,20 @@ The following folders will be automatically created depending on the selection a
 ![Example of analysed image](images/8_analysed_image.png)
 
 1. **summary** with the summarysed data.
+
+In the summary folder the subfolders will be created depending on the run choice: *edges*, *otsu* or *MTSD*. These subfolders will contain * **image number**_summary_**run choice**.csv* files with cell-by-cell data for each analysed image. The cell numbers correspond to that in *images_analysed* files.
+
+Additionally, in the summary folder itself will be files with data averaged per image: *Summary_edges.csv*, *Summary_otsu.csv* or *Summary_MTSD.csv* depending on the run choice.
+
+## Output data explained
+
+### MTSD
+The following columns record cell-by-cell data:
+1. **Cell** - cell number, which correspond to the cell number in *images_analysed*.
+1. **Area** - area in pixels of each cell.
+1. **Eccentricity** - eccentricity of each cell.
+1. **Direction_cell** - direction of the main axis of each cell calculated from regionprops.
+1. **SD** - a measure of cytoskeleton alignment, which is a standard deviation of signal direction distribution, fitted with Von-Misus distribution. For detailed explanation of how it is calculated see Gomez J.M., Chumakova L., Bulgakova N.A., Brown N.H. (2016) Microtubule organization is determined by the shape of epithelial cells. Nature Communications, 7. [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/27779189).
+1. **DEV** - a measure of direction of overall cytoskeleton orientation - mean of signal direction distribution, fitted with Von-Misus distribution.
+1. **Elongation** - aspect ratio of each cell calculated from eccentricity.
+1. **Alignment** - an alernative measure for cytoskeleton alignment, calculated as proportion of signal within 10° of mean signal direction.
