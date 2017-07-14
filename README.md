@@ -25,14 +25,14 @@ Images should be numbered, but the numbers do not have to be sequencial, and the
 ## Output files and format
 
 The following folders will be automatically created depending on the selection at the start of a run.
-1. **distribution** with cell-by-cell signal direction distributions for each image (_**image number**_distribution.csv_) in case *MTSD* option for analysis is selected.
+1. **distribution** with cell-by-cell signal direction distributions for each image (**image number**_distribution.csv) in case *MTSD* option for analysis is selected.
 
 1. **images_analysed** with adjusted images of cytoskeleton, projection of a cell mask on them and numbers of each analysed cell.<br>
 ![Example of analysed image](images/8_analysed_image.png)
 
 1. **summary** with the summarysed data.
 
-In the summary folder the subfolders will be created depending on the run choice: *edges*, *otsu* or *MTSD*. These subfolders will contain * **image number**_summary_**run choice**.csv* files with cell-by-cell data for each analysed image. The cell numbers correspond to that in *images_analysed* files.
+In the summary folder the subfolders will be created depending on the run choice: *edges*, *otsu* or *MTSD*. These subfolders will contain **image number**_summary_**run choice**.csv files with cell-by-cell data for each analysed image. The cell numbers correspond to that in *images_analysed* files.
 
 Additionally, in the summary folder itself will be files with data averaged per image: *Summary_edges.csv*, *Summary_otsu.csv* or *Summary_MTSD.csv* depending on the run choice.
 
