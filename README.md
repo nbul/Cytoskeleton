@@ -32,7 +32,7 @@ The following folders will be automatically created depending on the selection a
 
 1. **summary** with the summarysed data.
 
-In the summary folder the subfolders will be created depending on the run choice: *edges*, *otsu* or *MTSD*. These subfolders will contain **image number**_summary_**run choice**.csv files with cell-by-cell data for each analysed image. The cell numbers correspond to that in *images_analysed* files.
+In the summary folder the subfolders will be created depending on the run choice: *edges*, *otsu* or *MTSD*. These subfolders will contain **image number**_summary**run choice**.csv files with cell-by-cell data for each analysed image. The cell numbers correspond to that in *images_analysed* files.
 
 Additionally, in the summary folder itself will be files with data averaged per image: *Summary_edges.csv*, *Summary_otsu.csv* or *Summary_MTSD.csv* depending on the run choice.
 
