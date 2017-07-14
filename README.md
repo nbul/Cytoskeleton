@@ -9,7 +9,7 @@ The following three sub-folders within a single directory need to be present:
 
 1. **cytoskeleton** with the corresponding tif projections (we use maximum projection in this case), which will be analysed for alignminet of cytoskeleton fibers within cells.
 
-1. **cytoskeleton** with the corresponding tif projections (we use average projection in this case), which will be analysed for density and uniformity of cytoskeleton organisation.
+1. **cytoskeleton_average** with the corresponding tif projections (we use average projection in this case), which will be analysed for density and uniformity of cytoskeleton organisation.
 
 Images should be numbered, but the numbers do not have to be sequencial, and the names might contain additional information. The numbers in image names will be used in the output files.
 
@@ -24,4 +24,10 @@ Images should be numbered, but the numbers do not have to be sequencial, and the
 
 ## Output
 
+The following folders will be automatically created depending on the selection at the start of a run.
+1. **distribution** with cell-by-cell signal direction distributions for each image (* **image number**_distribution.csv*) in case *MTSD* option for analysis is selected.
 
+1. **images_analysed** with adjusted images of cytoskeleton, projection of a cell mask on them and numbers of each analysed cell.
+![Example of analysed image](images/8_analysed_image.tif)
+
+1. **summary** with the summarysed data.
