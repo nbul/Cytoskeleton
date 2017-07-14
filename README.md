@@ -28,6 +28,6 @@ The following folders will be automatically created depending on the selection a
 1. **distribution** with cell-by-cell signal direction distributions for each image (* **image number**_distribution.csv*) in case *MTSD* option for analysis is selected.
 
 1. **images_analysed** with adjusted images of cytoskeleton, projection of a cell mask on them and numbers of each analysed cell.
-![Example of analysed image](images/8_analysed_image.tif)
+![Example of analysed image](images/8_analysed_image.png)
 
 1. **summary** with the summarysed data.
