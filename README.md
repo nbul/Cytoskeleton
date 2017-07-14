@@ -48,3 +48,18 @@ The following columns record cell-by-cell data:
 1. **DEV** - a measure of direction of overall cytoskeleton orientation - mean of signal direction distribution, fitted with Von-Misus distribution.
 1. **Elongation** - aspect ratio of each cell calculated from eccentricity.
 1. **Alignment** - an alernative measure for cytoskeleton alignment, calculated as proportion of signal within 10° of mean signal direction.
+
+### Density 
+Independent on the chosen way to threshold, the resulting files will contain the following cell-by-cell data about the cytoskeleton signal:
+1. **Cell** - cell number, which correspond to the cell number in *images_analysed*.
+1. **Signal area** - proportion of pixels above threshold.
+1. **Density** - mean intensity of pixels above threshold with subtracted mean intensity of pixels below threshold, and then normalized to mean intensity of pixels below threshold and signal area.
+1. **Bundling** - mean intensity of pixels above threshold normalized to threshold.
+1. **Uniformity** - standard deviation of signal in each cell without thresholding.
+1. **Sparseness** - sparseness of the signal, calsulated as discribed in Lin A.C., Bygrave A.M., de Calignon A., Lee T., Miesenböck G. (2014). Sparse, decorrelated odor coding in the mushroom body enhances learned odor discrimination. Nat Neurosci. 17(4):559-68.[PubMed](https://www.ncbi.nlm.nih.gov/pubmed/24561998). 
+1. **Skewness** - skewness of the signal above threshold.
+1. **Kurtosis** - kurtosis of the signal above threshold.
+
+## References
+1. Gomez J.M., Chumakova L., Bulgakova N.A., Brown N.H. (2016) Microtubule organization is determined by the shape of epithelial cells. Nature Communications, 7. [PubMed](https://www.ncbi.nlm.nih.gov/pubmed/27779189).
+1. Lin A.C., Bygrave A.M., de Calignon A., Lee T., Miesenböck G. (2014). Sparse, decorrelated odor coding in the mushroom body enhances learned odor discrimination. Nat Neurosci. 17(4):559-68.[PubMed](https://www.ncbi.nlm.nih.gov/pubmed/24561998).
