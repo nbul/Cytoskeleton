@@ -28,7 +28,7 @@ end
 Averages_MTSDall(1,:) = [];
 Averages_MTSDall = sortrows(Averages_MTSDall,1);
 cd(sum_dir);
-csvwrite('MTSDall.scv', Averages_MTSDall);
+csvwrite('MTSDall.csv', Averages_MTSDall);
 
 for k=0.92:0.005:0.99
     data_k =  Averages_MTSDall( Averages_MTSDall(:,1) >= k-0.0025 & Averages_MTSDall(:,1) < k+0.0025,:);
