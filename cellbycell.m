@@ -6,7 +6,7 @@ m_added_norm = zeros(45,numel(b_valid)+1);
 m_added_norm(:,1) = bincenter;
 
 %%  Conduct cell-by-cell analysis.
-for k = 1:numel(b_valid);
+for k = 1:numel(b_valid)
     
     %Apply Sobel Filter over a MTs image to test it
     clear H_full V_full H V M D x y mxd_thr mxd_corrected mxd_indexed
@@ -23,17 +23,17 @@ for k = 1:numel(b_valid);
     p = 1;
     mxd = zeros(1,2);
     
-    for j = 2:(y-1);
-        for i=2:(x-1);
+    for j = 2:(y-1)
+        for i=2:(x-1)
             %Only directions different to zero are added to table
             if ((M(i,j)) & (M(i+1,j)) & (M(i-1,j)) & (M(i,j+1))  & (M(i,j-1) ~=0) &...
-                    (M(i-1,j-1)) & (M(i-1 , j+1)) & (M(i+1 , j-1)) & (M(i+1, j+1))) ~= 0 ; 
+                    (M(i-1,j-1)) & (M(i-1 , j+1)) & (M(i+1 , j-1)) & (M(i+1, j+1))) ~= 0  
                 mxd(p,2) = M(i,j); %Second column with magnitudes
                 mxd(p,1) = D(i,j); %First column with angles
                 p = p + 1;
-            end;
-        end;
-    end;
+            end
+        end
+    end
     max_mxd  = max(mxd(:,2)); %maximum magnitude
     mxd_thr = mxd./repmat([1,max_mxd], length(mxd), 1); %normalised to max magnitude
     
@@ -59,7 +59,7 @@ for k = 1:numel(b_valid);
     end
    
     m_added_norm(:,k+1) = m_added/sum(m_added);
-end;
+end
 
 %% writing down distributions in each image
 cd(dist_dir);
