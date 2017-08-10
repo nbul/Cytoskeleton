@@ -2,7 +2,7 @@ clear variables
 clc
 
 MTnumber = 100;
-Eccentricity = 0.92;
+Eccentricity = 0.9;
 shortside = 200;
 
 
@@ -142,7 +142,7 @@ for k=1:25
     image = zeros(longside,shortside);
     image_MT_gray = image;
     for i = 1:MTnumber
-        image_MT = insertShape(image,'line',intersect(i,:), 'linewidth', 4, 'Color', [I*bundled(i) I*bundled(i) I*bundled(i)]);
+        image_MT = insertShape(image,'line',intersect(i,:), 'linewidth', 3, 'Color', [I*bundled(i) I*bundled(i) I*bundled(i)]);
         image_MT_gray = image_MT_gray + image_MT(:,:,1);
     end
     
