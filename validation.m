@@ -279,7 +279,7 @@ for k=1:25
         Value(i,k+1)=0;
         for l=1:MTnumber
             if angles(l)>=binrange(i) && angles(l)<binrange(i+1)
-                Value(i,k+1) = Value(i,k+1) + Length(l);
+                Value(i,k+1) = Value(i,k+1) + Length(l)*bundled(l);
             end
         end
     end
