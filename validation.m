@@ -26,7 +26,7 @@ I = str2double(parameters{3});
 bundling= str2double(parameters{4});
 Eccentricity= str2double(parameters{5});
 
-usedefault = questdlg(strcat('Which threshold methos?'),'Settings','Edge','Otsu','Edge');
+usedefault = questdlg(strcat('Which threshold methos?'),'Settings','Edge','Otsu','Otsu');
 if strcmp(usedefault, 'Otsu')
     method = 0;
 end
