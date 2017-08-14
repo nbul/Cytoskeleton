@@ -10,11 +10,11 @@ Gy = Gx';
 
 currdir = pwd;
 addpath(pwd);
+shortside = 200;
+counter3 = 0;
 
-counter = 0;
-
-result_dir = '/data/md1nbu/MTSD/';
-for Eccentricity = 0.7:0.5:0.95
+result_dir = '/data/md1nbu/MTSD';
+for Eccentricity = 0.7:0.05:0.95
     long_side = zeros(1, (4*shortside));
     for i=(2*shortside):(10*shortside)
         selected_signal = ones(i,shortside);
@@ -25,7 +25,7 @@ for Eccentricity = 0.7:0.5:0.95
     longside = Ind + 2*shortside-1;
     
     for bundling = 1:1:5
-        for intensity = 5:10:55
+        for I = 5:10:55
             for distribution = 20:10:70
                 for MTnumber = 25:25:200
                     m_added_norm = zeros(45,101);
@@ -120,7 +120,8 @@ for Eccentricity = 0.7:0.5:0.95
                         image = zeros(longside,shortside);
                         image_MT_gray = image;
                         for i = 1:MTnumber
-                            image_MT = insertShape(image,'line',intersect(i,:), 'linewidth', 3, 'Color', [I*bundled(i) I*bundled(i) I*bundled(i)]);
+                            image_MT = insertShape(image,'line',intersect(i,:), 'linewidth', 3, 'Color',...
+                                [I*bundled(i) I*bundled(i) I*bundled(i)]);
                             image_MT_gray = image_MT_gray + image_MT(:,:,1);
                         end
                         
@@ -132,16 +133,9 @@ for Eccentricity = 0.7:0.5:0.95
                         image_edges = edge(image_MT_gray, 'Canny');
                         signal_edges = image_MT_gray .* image_edges;
                         %% Edge detection
-                        if method == 1
-                            [A1, A2] = histcounts(signal_edges(signal_edges>0));
-                            bins = (min(A2)+((A2(2)-A2(1))/2)):((A2(2)-A2(1))):(max(A2)-((A2(2)-A2(1))/2));
-                            [XOut,YOut] = prepareCurveData(bins,A1);
-                            fo = fitoptions('gauss1', 'Lower', [0 min(A2) 0], 'Upper', [Inf max(A2) Inf]);
-                            [threshold, gof_edges] = fit(XOut, YOut, 'gauss1', fo);
-                            im_bin_c = imbinarize(image_MT_gray,threshold.b1*0.7);
-                        else
-                            im_bin_c = imbinarize(imadjust(image_MT_gray/255),graythresh(imadjust(image_MT_gray/255))*0.7);
-                        end
+                        
+                        im_bin_c = imbinarize(imadjust(image_MT_gray/255),graythresh(imadjust(image_MT_gray/255))*0.7);
+                        
                         %% Generate Cell Masks.
                         signal_original = image_MT_gray .* im_bin_c;
                         background_original = image_MT_gray .* (ones(longside,shortside) - im_bin_c);
@@ -191,7 +185,7 @@ for Eccentricity = 0.7:0.5:0.95
                         
                         %% MTSD
                         %Apply Sobel Filter over a MTs image to test it
-                        clear H_full V_full H V M D x y mxd_thr mxd_corrected mxd_indexed
+                        clear H_full V_full H V M D x y mxd_thr mxd_corrected mxd_indexed bins
                         object_double = image_MT_gray;
                         H_full = conv2(object_double,Gx);
                         V_full = conv2(object_double,Gy);
@@ -290,47 +284,47 @@ for Eccentricity = 0.7:0.5:0.95
                     summary(:,11) = SD';
                     % MT theoretical
                     summary(:,12) = mu'+90;
-                    counter = counter +1;
+                    counter3 = counter3 + 1;
                     %Parameters
-                    Averages(counter,1) = Eccentricity;
-                    Averages(counter,2) = bundling;
-                    Averages(counter,3) = intensity;
-                    Averages(counter,4) = distribution;
-                    Averages(counter,5) = MTnumber;
+                    Averages(counter3,1) = Eccentricity;
+                    Averages(counter3,2) = bundling;
+                    Averages(counter3,3) = I;
+                    Averages(counter3,4) = distribution;
+                    Averages(counter3,5) = MTnumber;
                     % Signal area
-                    Averages(counter,6) = mean(summary(:,2));
-                    Averages(counter,7) = sqrt(var(summary(:,2))/length(summary(:,2)));
+                    Averages(counter3,6) = mean(summary(:,2));
+                    Averages(counter3,7) = sqrt(var(summary(:,2))/length(summary(:,2)));
                     % Density
-                    Averages(counter,8) = mean(summary(:,3));
-                    Averages(counter,9) = sqrt(var(summary(:,3))/length(summary(:,3)));
+                    Averages(counter3,8) = mean(summary(:,3));
+                    Averages(counter3,9) = sqrt(var(summary(:,3))/length(summary(:,3)));
                     % Bundling
-                    Averages(counter,10) = mean(summary(:,4));
-                    Averages(counter,11) = sqrt(var(summary(:,4))/length(summary(:,4)));
+                    Averages(counter3,10) = mean(summary(:,4));
+                    Averages(counter3,11) = sqrt(var(summary(:,4))/length(summary(:,4)));
                     % Uniformity
-                    Averages(counter,12) = mean(summary(:,5));
-                    Averages(counter,13) = sqrt(var(summary(:,5))/length(summary(:,5)));
+                    Averages(counter3,12) = mean(summary(:,5));
+                    Averages(counter3,13) = sqrt(var(summary(:,5))/length(summary(:,5)));
                     % Sparseness
-                    Averages(counter,14) = mean(summary(:,6));
-                    Averages(counter,15) = sqrt(var(summary(:,6))/length(summary(:,6)));
+                    Averages(counter3,14) = mean(summary(:,6));
+                    Averages(counter3,15) = sqrt(var(summary(:,6))/length(summary(:,6)));
                     % Skewness
-                    Averages(counter,16) = mean(summary(:, 7));
-                    Averages(counter,17) = sqrt(var(summary(:, 7))/length(summary(:, 7)));
+                    Averages(counter3,16) = mean(summary(:, 7));
+                    Averages(counter3,17) = sqrt(var(summary(:, 7))/length(summary(:, 7)));
                     % Kurtosis
-                    Averages(counter,18) = mean(summary(:, 8));
-                    Averages(counter,19) = sqrt(var(summary(:, 8))/length(summary(:, 8)));
+                    Averages(counter3,18) = mean(summary(:, 8));
+                    Averages(counter3,19) = sqrt(var(summary(:, 8))/length(summary(:, 8)));
                     % MTSD
-                    Averages(counter,20) = mean(summary(:, 9));
-                    Averages(counter,21) = sqrt(var(summary(:, 9))/length(summary(:, 9)));
+                    Averages(counter3,20) = mean(summary(:, 9));
+                    Averages(counter3,21) = sqrt(var(summary(:, 9))/length(summary(:, 9)));
                     % MT direction
-                    Averages(counter,22) = mean(summary(:, 10));
-                    Averages(counter,23) = sqrt(var(summary(:, 10))/length(summary(:, 10)));
+                    Averages(counter3,22) = mean(summary(:, 10));
+                    Averages(counter3,23) = sqrt(var(summary(:, 10))/length(summary(:, 10)));
                     % MTSD theoretical
-                    Averages(counter,24) = mean(summary(:, 11));
-                    Averages(counter,25) = sqrt(var(summary(:, 11))/length(summary(:, 11)));
+                    Averages(counter3,24) = mean(summary(:, 11));
+                    Averages(counter3,25) = sqrt(var(summary(:, 11))/length(summary(:, 11)));
                     % MT direction theoretical
-                    Averages(counter,26) = mean(summary(:, 12));
-                    Averages(counter,27) = sqrt(var(summary(:, 12))/length(summary(:, 12)));
-                    Averages(counter,28) = length(summary(:,1));
+                    Averages(counter3,26) = mean(summary(:, 12));
+                    Averages(counter3,27) = sqrt(var(summary(:, 12))/length(summary(:, 12)));
+                    Averages(counter3,28) = length(summary(:,1));
                     
                 end
             end
