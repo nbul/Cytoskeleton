@@ -30,8 +30,24 @@ if method == 1
     fo = fitoptions('gauss1', 'Lower', [0 min(A2) 0], 'Upper', [Inf max(A2) Inf]);
     [threshold, gof_edges] = fit(XOut, YOut, 'gauss1', fo);
     im_bin_c = imbinarize(image_original_double,threshold.b1*0.7);
-else
+elseif method == 0
     im_bin_c = imbinarize(imadjust(image_original_double),graythresh(imadjust(image_original_double))*0.7);
+elseif method == 2
+    Mat = zeros((im_x-2)*(im_y-2),2);
+    counter4=0;
+    im_adjusted = imadjust(image_original_double);
+    for xc=2:(im_x-1)
+        for yc=2:(im_y-1)
+            counter4=counter4+1;
+            Mat(counter4,1) = im_adjusted(yc,xc);
+            Mat(counter4,2) = (im_adjusted(yc-1,xc-1) + im_adjusted(yc-1,xc) + im_adjusted(yc-1,xc+1) +...
+                im_adjusted(yc+1,xc-1) + im_adjusted(yc+1,xc) + im_adjusted(yc+1,xc+1) +...
+                im_adjusted(yc,xc-1) + im_adjusted(yc,xc+1))/8;
+        end
+    end
+    Mat2 = hist3(Mat,'Nbins',[256, 256]);
+    threshold = TwoDOtsumine(Mat2, length(Mat));
+    im_bin_c = imbinarize(imadjust(image_original_double),threshold*0.7/255);
 end
 
 %% Generate Cell Masks.

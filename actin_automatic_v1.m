@@ -42,9 +42,11 @@ if strcmp(usedefault, 'Density')
     path = 0;
 end
 if path == 0
-    usedefault = questdlg(strcat('Which threshold methos?'),'Settings','Edge','Otsu','Edge');
+    usedefault = questdlg(strcat('Which threshold methos?'),'Settings','Edge','Otsu','2DOtsu','Otsu');
     if strcmp(usedefault, 'Otsu')
         method = 0;
+    elseif strcmp(usedefault, '2DOtsu')
+        method = 2;
     end
 end
 
@@ -72,13 +74,19 @@ else
              mkdir(filedir,'/summary/edges');
          end
          result_dir = [filedir, '/summary/edges'];
-     else
+    elseif method == 0
          Averages_filename = 'Summary_otsu.csv';
          if exist([filedir,'/summary/otsu'],'dir') == 0
              mkdir(filedir,'/summary/otsu');
          end
          result_dir = [filedir, '/summary/otsu'];
-     end
+    elseif method == 2
+        Averages_filename = 'Summary_2Dotsu.csv';
+        if exist([filedir,'/summary/2Dotsu'],'dir') == 0
+            mkdir(filedir,'/summary/2Dotsu');
+        end
+        result_dir = [filedir, '/summary/2Dotsu'];
+    end
 end
 %% Parameters
 bin_size = 4;
