@@ -28,9 +28,11 @@ if method == 1
     bins = (min(A2)+((A2(2)-A2(1))/2)):((A2(2)-A2(1))):(max(A2)-((A2(2)-A2(1))/2));
     [XOut,YOut] = prepareCurveData(bins,A1);
     fo = fitoptions('gauss1', 'Lower', [0 min(A2) 0], 'Upper', [Inf max(A2) Inf]);
-    [threshold, gof_edges] = fit(XOut, YOut, 'gauss1', fo);
-    im_bin_c = imbinarize(image_original_double,threshold.b1*0.7);
+    [threshold1, gof_edges] = fit(XOut, YOut, 'gauss1', fo);
+    threshold = threshold1.b1*0.7;
+    im_bin_c = imbinarize(image_original_double,threshold);
 elseif method == 0
+    threshold = graythresh(imadjust(image_original_double))*0.7;
     im_bin_c = imbinarize(imadjust(image_original_double),graythresh(imadjust(image_original_double))*0.7);
 elseif method == 2
     Mat = zeros((im_x-2)*(im_y-2),2);
@@ -46,9 +48,36 @@ elseif method == 2
         end
     end
     Mat2 = hist3(Mat,'Nbins',[256, 256]);
-    threshold = TwoDOtsumine(Mat2, length(Mat));
-    im_bin_c = imbinarize(imadjust(image_original_double),threshold*0.7/255);
+    threshold = TwoDOtsumine(Mat2, length(Mat))*0.7/255;
+    im_bin_c = imbinarize(imadjust(image_original_double));
+elseif method == 3
+    Mat = zeros((im_x-2)*(im_y-2),3);
+    counter4=0;
+    for xc=2:(im_x-1)
+        for yc=2:(im_y-1)
+            counter4=counter4+1;
+            Mat(counter4,1) = image_original_double(yc,xc);
+            Mat(counter4,2) = (image_original_double(yc-1,xc-1) + image_original_double(yc-1,xc) + image_original_double(yc-1,xc+1) +...
+                image_original_double(yc+1,xc-1) + image_original_double(yc+1,xc) + image_original_double(yc+1,xc+1) +...
+                image_original_double(yc,xc-1) + image_original_double(yc,xc+1))/8;
+            median_mat = image_original_double(yc-1:yc+1,xc-1:xc+1);
+            Mat(counter4,3) = median(median_mat(:));
+        end
+    end 
+    km = kmeans(Mat,2, 'Replicates',5);
+    km2 = reshape(km, im_x-2,im_y-2);
+    km2 = km2 - 1;
+    km3 = image_original_double(2:end-1,2:end-1) .* km2;
+    km4 = image_original_double(2:end-1,2:end-1) .* (1-km2);
+    if max(max(km4)) > max(max(km3))
+        km3 = km4;
+    end
+    km3 = km3(:);
+    km3(km3 ==0) =[];
+    threshold = min(km3)*0.7;
+    im_bin_c = imbinarize(image_original_double,threshold);
 end
+
 
 %% Generate Cell Masks.
 signal_original = image_original_double .* im_bin_c;
@@ -78,8 +107,8 @@ for k = 1:numel(b_valid)
     % Relative to edges intensity
     if max(to_analyse_c.PixelValues)~= 0
         mts_bundling(k) = (mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))-...
-            (0.7*mean(signal_edges(signal_edges>0)))) / ...
-            (0.7*mean(signal_edges(signal_edges>0)));
+            min(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))) / ...
+            min(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
 %         mts_bundling(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / ...
 %             (sum_pixvalues_back_o / num_pixvalues_back_c));
         %         mts_bundling(k) = mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))...
@@ -95,8 +124,14 @@ for k = 1:numel(b_valid)
     Spars(k) = calcSparseness(to_analyse_o.PixelValues/mean(to_analyse_o.PixelValues(to_analyse_o.PixelValues>0)),1);
     
     % Kurtosis and skewness
-    signal = to_analyse_all.PixelValues - (0.7*mean(signal_edges(signal_edges>0)));
-    kurt(k) = kurtosis(signal);
-    skew(k) = skewness(signal);
+    if max(to_analyse_c.PixelValues)~= 0
+        signal = to_analyse_all.PixelValues - min(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1));
+        kurt(k) = kurtosis(signal);
+        skew(k) = skewness(signal);
+    else
+        signal = 0;
+        kurt(k) = 0;
+        skew(k) = 0;
+    end
 end
 

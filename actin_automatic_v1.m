@@ -42,11 +42,13 @@ if strcmp(usedefault, 'Density')
     path = 0;
 end
 if path == 0
-    usedefault = questdlg(strcat('Which threshold methos?'),'Settings','Edge','Otsu','2DOtsu','Otsu');
+    usedefault = questdlg(strcat('Which threshold methos?'),'Settings','kmeans','Otsu','2DOtsu','kmeans');
     if strcmp(usedefault, 'Otsu')
         method = 0;
     elseif strcmp(usedefault, '2DOtsu')
         method = 2;
+    elseif strcmp(usedefault, 'kmeans')
+        method = 3;
     end
 end
 
@@ -86,6 +88,12 @@ else
             mkdir(filedir,'/summary/2Dotsu');
         end
         result_dir = [filedir, '/summary/2Dotsu'];
+    elseif method == 3
+        Averages_filename = 'Summary_kmeans.csv';
+        if exist([filedir,'/summary/kmeans'],'dir') == 0
+            mkdir(filedir,'/summary/kmeans');
+        end
+        result_dir = [filedir, '/summary/kmeans'];
     end
 end
 %% Parameters

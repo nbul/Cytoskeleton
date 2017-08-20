@@ -83,8 +83,14 @@ else
     if method == 1
         summary_filename = [num2str(Number),'_summary_edge.csv'];
         csvwrite_with_headers(summary_filename,summary,headers2);
-    else
+    elseif method == 0
         summary_filename = [num2str(Number),'_summary_otsu.csv'];
+        csvwrite_with_headers(summary_filename,summary,headers2);
+    elseif method == 2
+        summary_filename = [num2str(Number),'_summary_2Dotsu.csv'];
+        csvwrite_with_headers(summary_filename,summary,headers2);
+    elseif method == 3
+        summary_filename = [num2str(Number),'_summary_kmeans.csv'];
         csvwrite_with_headers(summary_filename,summary,headers2);
     end
     Averages(loop,1) = Number;
