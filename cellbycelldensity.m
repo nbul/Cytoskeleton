@@ -51,31 +51,34 @@ elseif method == 2
     threshold = TwoDOtsumine(Mat2, length(Mat))*0.7/255;
     im_bin_c = imbinarize(imadjust(image_original_double));
 elseif method == 3
-    Mat = zeros((im_x-2)*(im_y-2),3);
+   Mat = zeros((im_x-2)*(im_y-2),3);
     counter4=0;
     for xc=2:(im_x-1)
         for yc=2:(im_y-1)
             counter4=counter4+1;
-            Mat(counter4,1) = image_original_double(yc,xc);
-            Mat(counter4,2) = (image_original_double(yc-1,xc-1) + image_original_double(yc-1,xc) + image_original_double(yc-1,xc+1) +...
-                image_original_double(yc+1,xc-1) + image_original_double(yc+1,xc) + image_original_double(yc+1,xc+1) +...
-                image_original_double(yc,xc-1) + image_original_double(yc,xc+1))/8;
-            median_mat = image_original_double(yc-1:yc+1,xc-1:xc+1);
+            Mat(counter4,1) = Image2(yc,xc);
+            Mat(counter4,2) = (Image2(yc-1,xc-1) + Image2(yc-1,xc) + Image2(yc-1,xc+1) +...
+                Image2(yc+1,xc-1) + Image2(yc+1,xc) + Image2(yc+1,xc+1) +...
+                Image2(yc,xc-1) + Image2(yc,xc+1))/8;
+            median_mat = Image2(yc-1:yc+1,xc-1:xc+1);
             Mat(counter4,3) = median(median_mat(:));
         end
-    end 
-    km = kmeans(Mat,2, 'Replicates',5);
-    km2 = reshape(km, im_x-2,im_y-2);
-    km2 = km2 - 1;
-    km3 = image_original_double(2:end-1,2:end-1) .* km2;
-    km4 = image_original_double(2:end-1,2:end-1) .* (1-km2);
-    if max(max(km4)) > max(max(km3))
-        km3 = km4;
     end
-    km3 = km3(:);
-    km3(km3 ==0) =[];
-    threshold = min(km3)*0.7;
-    im_bin_c = imbinarize(image_original_double,threshold);
+    
+    myfunc = @(X,K)(kmeans(X, K, 'replicate',5));
+    eva = evalclusters(Mat,myfunc,'DaviesBouldin',...
+        'klist',2:15);
+    
+    km = kmeans(Mat,eva.OptimalK,'replicate',5);
+    km2 = reshape(km, im_y-2,im_x-2);
+    Image2_small = Image2(2:end-1,2:end-1);
+    thr = zeros(eva.OptimalK,1);
+    for clust = 1:eva.OptimalK
+        thr(clust) = mean(Image2_small(km2==clust));
+    end
+    [Num1, Idx1] = min(thr);
+    threshold = max(Image2_small(km2==Idx1));
+    im_bin_c = imbinarize(im2double(Image2),double(threshold)/255/255);
 end
 
 
