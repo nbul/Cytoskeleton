@@ -9,20 +9,23 @@ close all
 %% Determening paths and setting folders
 currdir = pwd;
 addpath(pwd);
-dens_dir =[currdir, '/cytoskeleton_average'];
+max_dir =[currdir, '/cytoskeleton'];
+average_dir =[currdir, '/cytoskeleton_average'];
 b_dir = [currdir, '/borders'];
 
 mkdir(currdir,'/summary');
 sum_dir = [currdir, '/summary'];
-method = 3;
+mkdir(currdir,'/distribution');
+dist_dir = [currdir, '/distribution'];
 
 %% Number of files to analyse
-cd(dens_dir);
+cd(max_dir);
 files = dir('*.tif');
 cd(currdir);
-Averages_filename = 'Summary_kmeans.csv';
 mkdir(currdir,'/summary/kmeans');
-result_dir = [currdir, '/summary/kmeans'];
+dens_dir = [currdir, '/summary/kmeans'];
+mkdir(currdir,'/summary/MTSD');
+MTSD_dir = [currdir, '/summary/MTSD'];
 %% Parameters
 bin_size = 4;
 binrange = -90 : bin_size : 90;
@@ -33,10 +36,12 @@ warning('off','stats:kmeans:FailedToConvergeRep');
 for loop=1:length(files)
     %% reading files
     clear Name Number Actin_file Image_actin Path  Image_borders
-    cd(dens_dir);
+    cd(max_dir);
     Name = files(loop).name;
     Number = sscanf(Name, '%f');
     Actin_file = [num2str(Number),'.tif'];
+    Image = imread(Actin_file);
+    cd(average_dir);
     Image2 = imread(Actin_file);
     cd(b_dir);
     Path = [b_dir, '/', num2str(Number),'/'];
@@ -46,18 +51,14 @@ for loop=1:length(files)
     
     %% Collect data about cells and boundaries
     borders;
-    cellbycelldensity;
+    MTSDcluster;
+    vonmises_fit_dist_sum;
+    DensityCluster;  
     
     %% writing down summarised data
     SummariesCluster;
     
 end
-Averages = sortrows(Averages,1);
-% summary_filename = 'Summary_all.csv';
-headers = {'Embryo', 'Signal area', 'sem','Density','sem','Bundling','sem', 'Uniformity','sem', ...
-        'Sparseness','sem', 'Skewness','sem', 'Kurtosis','sem','Cell number'};
-cd(sum_dir);
-csvwrite_with_headers(Averages_filename,Averages,headers);
 cd(currdir);
 
 clc
