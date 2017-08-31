@@ -42,14 +42,14 @@ for loop=1:length(files)
     Path = [b_dir, '/', num2str(Number),'/'];
     cd(Path);
     Image_borders = imread('tracked_bd.png');
-    [im_x, im_y] = size(Image);
+    [im_x, im_y] = size(Image2);
     
     %% Collect data about cells and boundaries
     borders;
     cellbycelldensity;
     
     %% writing down summarised data
-    summaries_cluster;
+    SummariesCluster;
     
 end
 Averages = sortrows(Averages,1);

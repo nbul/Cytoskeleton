@@ -8,4 +8,4 @@ cd /data/md1nbu/Density/Patronin_homo
 
 module load apps/matlab            
 
-matlab -nodesktop -r ‘actin_cluster_v1’
+matlab -nodesktop -r 'ActinClusterV1'
