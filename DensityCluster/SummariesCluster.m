@@ -13,11 +13,6 @@ summary(:,6) = mu';
 summary(summary(:,6)<0,6) = summary(summary(:,6)<0,6) + 180;
 summary(:,7) = 1./sqrt(1-cell_data(:,4).*cell_data(:,4));
 summary(:,8) = 100*(erf(10./SD'/sqrt(2))-erf(-10./SD'/sqrt(2)))/2;
-outlier_area = isoutlier(summary(:,2), 'median');
-outlier_ecc = outlier_area + isoutlier(summary(:,3), 'median');
-outlier_SD = outlier_ecc + isoutlier(summary(:,5), 'median');
-outlier_number = length(outlier_SD(outlier_SD ~= 0));
-summary(outlier_SD ~= 0,:) = [];
 summary_filename = ['Summary_MTSD',num2str(Number),'.csv'];
 headers2 = {'Cell', 'Area', 'Eccentricity','Direction_cell', ...
     'SD', 'DEV', 'Elongation', 'Alignment'};
