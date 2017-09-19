@@ -12,6 +12,7 @@ Spars = zeros(1, numel(b_valid));
 mts_bundling = zeros(1, numel(b_valid));
 kurt = zeros(1, numel(b_valid));
 skew = zeros(1, numel(b_valid));
+space = zeros(1, numel(b_valid));
 
 %% Processed Image for Density Analysis
 image_original_double = im2double(Image2);
@@ -48,6 +49,8 @@ end
 [Num1, Idx1] = min(thr);
 threshold = max(Image2_small(km2==Idx1));
 im_bin_c = imbinarize(im2double(Image2),double(threshold)/255/255);
+im_bin_b = imcomplement(im_bin_c);
+
 
 data_dens = [eva.OptimalK, threshold, max(Image2(:))];
 headers4 = {'number clusters', 'threshold', 'max intensity'};
@@ -109,6 +112,15 @@ for k = 1:numel(b_valid)
         signal = 0;
         kurt(k) = 0;
         skew(k) = 0;
+    end
+    
+    % Spaces
+    ccbg = bwconncomp(selected_signal.*im_bin_b);
+    Space1 = regionprops(ccbg, 'Area');
+    if isempty(Space1)==0
+        space(k) = mean(cat(1, Space1.Area));
+    else
+        space(k) =0;
     end
 end
 

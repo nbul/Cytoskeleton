@@ -38,13 +38,15 @@ summary_dens(:,6) = Spars';
 summary_dens(:,7) = skew';
 % Kurtosis
 summary_dens(:,8) = kurt';
+% Gaps
+summary_dens(:,9) = space';
 % Area
-summary_dens(:,9) = cell_data(:,3);
+summary_dens(:,10) = cell_data(:,3);
 % Eccentricity
-summary_dens(:,10) = cell_data(:,4);
+summary_dens(:,11) = cell_data(:,4);
 summary_dens(isnan(summary_dens(:,3)) == 1,:) = [];
 headers3 = {'Cell', 'Signal area', 'Density','Bundling', 'Uniformity', ...
-    'Sparseness', 'Skewness', 'Kurtosis', 'Area', 'Eccentricity'};
+    'Sparseness', 'Skewness', 'Kurtosis', 'Gaps', 'Area', 'Eccentricity'};
 
 summary_filename = ['Summary_kmeans_', num2str(Number),'.csv'];
 csvwrite_with_headers(summary_filename,summary_dens,headers3);
