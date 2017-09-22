@@ -279,14 +279,38 @@ for k=0.92:0.005:0.99
 end
 
 vonmises_fit_dist_sum;
-result(:,1) = (0.92:0.005:0.99)';
-result(:,2) = SD';
-result(isnan(result(:,2)) == 1,:) = [];
+result(:,1) = 
 
-cd(sum_dir);
-headers = {'Eccentricity','MTSD'};
-csvwrite_with_headers('MTSDpulled.csv',result,headers);
-
+% % read the data
+% cd(dist_dir);
+% MTSDpulled = csvread('1_distribution.csv',1,0);
+% for loop=2:length(files)
+%     Dist_file = [num2str(loop),'_distribution.csv'];
+%     Data_temp = csvread(Dist_file,1,1);
+%     Data3 = MTSDpulled;
+%     MTSDpulled  = [Data3, Data_temp];
+% end
+% cd(MTSD_dir);
+% Eccpulled = csvread('Summary_MTSD1.csv',1,0);
+% for loop=2:length(files)
+%     Ecc_file = ['Summary_MTSD',num2str(loop),'.csv'];
+%     Data_temp = csvread(Ecc_file,1,0);
+%     Data4 = Eccpulled;
+%     Eccpulled  = [Data4; Data_temp];
+% end
+%
+% Dist_new(:,1) = MTSDpulled(:,1);
+% % correcting for orientation
+% for i = 1: size(Eccpulled,1)
+%     orientation = Eccpulled(i,4);
+%     Dist_temp(:,1) = MTSDpulled(:,1);
+%     Dist_temp(:,1) = Dist_new(:,1) + 90 - 2*floor(orientation/2);
+%     Dist_temp(Dist_temp(:,1)>90,1) = Dist_temp(Dist_temp(:,1)>90,1)-180;
+%     Dist_temp(Dist_temp(:,1)<-90,1) = Dist_temp(Dist_temp(:,1)<-90,1)+180;
+%     Dist_temp(:,2) = MTSDpulled(:,i+1);
+%     Dist_temp = sortrows(Dist_temp,1);
+%     Dist_new(:,i+1) = Dist_temp(:,2);
+% end
 cd(currdir);
 clc
 clear variables

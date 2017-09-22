@@ -5,7 +5,7 @@
 #$ -M n.bulgakova@sheffield.ac.uk
 #$ -m bea
 
-cd /data/md1nbu/Density/ClipN_control
+cd /data/md1nbu/Density/CD8
 
 module load apps/matlab            
 

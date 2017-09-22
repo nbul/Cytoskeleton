@@ -5,7 +5,7 @@
 #$ -M n.bulgakova@sheffield.ac.uk
 #$ -m bea
 
-cd /data/md1nbu/Density/noEB1DN
+cd /data/md1nbu/Density/EB1DN_control
 
 module load apps/matlab            
 
