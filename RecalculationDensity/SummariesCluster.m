@@ -33,8 +33,8 @@ headers3 = {'Cell', 'Signal area', 'Density','Bundling', 'Uniformity', 'UNAAD', 
 summary_filename = ['Summary_kmeans_', num2str(Number),'_post.csv'];
 csvwrite_with_headers(summary_filename,summary_dens,headers3);
 
-outlier_area = isoutlier(summary_dens(:,10), 'median');
-outlier_ecc = outlier_area + isoutlier(summary_dens(:,11), 'median');
+outlier_area = isoutlier(summary_dens(:,11), 'median');
+outlier_ecc = outlier_area + isoutlier(summary_dens(:,12), 'median');
 outlier_number_dens = length(outlier_ecc(outlier_ecc ~= 0));
 summary_dens(outlier_ecc ~= 0,:) = [];
 summary_dens(isnan(summary_dens(:,3)) == 1,:) = [];
