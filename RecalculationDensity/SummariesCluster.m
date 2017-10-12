@@ -64,16 +64,16 @@ Averages_dens(loop,15) = sqrt(var(summary_dens(:, 8))/length(summary_dens(:, 8))
 Averages_dens(loop,16) = mean(summary_dens(:,9));
 Averages_dens(loop,17) = sqrt(var(summary_dens(:,9))/length(summary_dens(:,9)));
 % gaps
-Averages_dens(loop,18) = length(summary_dens(:,1));
-Averages_dens(loop,19) = outlier_number_dens;
+Averages_dens(loop,18) = mean(summary_dens(:,10));
+Averages_dens(loop,19) = sqrt(var(summary_dens(:,10))/length(summary_dens(:,10)));
 % cell number and outliers
-Averages_dens(loop,20) = mean(summary_dens(:,10));
-Averages_dens(loop,21) = sqrt(var(summary_dens(:,10))/length(summary_dens(:,10)));
+Averages_dens(loop,20) = length(summary_dens(:,1));
+Averages_dens(loop,21) = outlier_number_dens;
 % area
 Averages_dens(loop,22) = mean(summary_dens(:,11));
 Averages_dens(loop,23) = sqrt(var(summary_dens(:,11))/length(summary_dens(:,11)));
 % eccentricity
-Averages_dens(loop,24) = mean(summary_dens(:,11));
-Averages_dens(loop,25) = sqrt(var(summary_dens(:,11))/length(summary_dens(:,11)));
+Averages_dens(loop,24) = mean(summary_dens(:,12));
+Averages_dens(loop,25) = sqrt(var(summary_dens(:,12))/length(summary_dens(:,12)));
 
 cd(currdir);

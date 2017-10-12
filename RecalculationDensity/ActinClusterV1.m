@@ -48,6 +48,7 @@ for loop=1:length(files)
     
 end
 cd(sum_dir);
+Averages_dens = sortrows(Averages_dens,1);
 headers_dens = {'Embryo', 'Signal area', 'sem','Density','sem','Bundling','sem',...
     'Uniformity','sem', 'UNAAD','sem','Sparseness','sem', 'Skewness','sem', 'Kurtosis','sem',...
     'Gaps', 'sem', 'Cell number','Outliers', 'Area', 'sem', 'Eccentricity','sem'};
