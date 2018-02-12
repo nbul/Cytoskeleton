@@ -17,40 +17,23 @@ space = zeros(1, numel(b_valid));
 %% Processed Image for Density Analysis
 image_original_double = im2double(Image2);
 
-image_edges = edge(Image2, 'Canny');
-signal_edges = image_original_double .* image_edges;
+ImageX = Image2(:);
 
-
-Mat = zeros((im_x-2)*(im_y-2),3);
-counter4=0;
-for xc=2:(im_x-1)
-    for yc=2:(im_y-1)
-        counter4=counter4+1;
-        Mat(counter4,1) = Image2(yc,xc);
-        Mat(counter4,2) = (Image2(yc-1,xc-1) + Image2(yc-1,xc) + Image2(yc-1,xc+1) +...
-            Image2(yc+1,xc-1) + Image2(yc+1,xc) + Image2(yc+1,xc+1) +...
-            Image2(yc,xc-1) + Image2(yc,xc+1))/8;
-        median_mat = Image2(yc-1:yc+1,xc-1:xc+1);
-        Mat(counter4,3) = median(median_mat(:));
-    end
+parfor cl = 2:20
+    clust2(:,cl-1) = kmeans(im2double(ImageX), cl, 'replicate',5);
 end
+eva = evalclusters(im2double(ImageX),clust2,'DaviesBouldin');
+km = kmeans(im2double(ImageX),eva.OptimalK,'replicate',5);
+km2 = reshape(km, im_y,im_x);
 
-myfunc = @(X,K)(kmeans(X, K, 'replicate',5));
-eva = evalclusters(Mat,myfunc,'DaviesBouldin',...
-    'klist',2:15);
-
-km = kmeans(Mat,eva.OptimalK,'replicate',5);
-km2 = reshape(km, im_y-2,im_x-2);
-Image2_small = Image2(2:end-1,2:end-1);
 thr = zeros(eva.OptimalK,1);
 for clust = 1:eva.OptimalK
-    thr(clust) = mean(Image2_small(km2==clust));
+    thr(clust) = mean(Image2(km2==clust));
 end
 [Num1, Idx1] = min(thr);
-threshold = max(Image2_small(km2==Idx1));
+threshold = max(Image2(km2==Idx1));
 im_bin_c = imbinarize(im2double(Image2),double(threshold)/255/255);
 im_bin_b = imcomplement(im_bin_c);
-
 
 data_dens = [eva.OptimalK, threshold, max(Image2(:))];
 headers4 = {'number clusters', 'threshold', 'max intensity'};
@@ -98,8 +81,7 @@ for k = 1:numel(b_valid)
     end
     
     % Uniformity
-    Uniformity(k) = 100 * (1 - sum(abs(to_analyse_all.PixelValues - mean(to_analyse_all.PixelValues))./...
-        (to_analyse_all.PixelValues + mean(to_analyse_all.PixelValues)))/length(to_analyse_all.PixelValues));
+    Uniformity(k) = 100 * (1 - sqrt(var(to_analyse_all.PixelValues))/mean(to_analyse_all.PixelValues));
     %Sparseness
     Spars(k) = calcSparseness(to_analyse_o.PixelValues/mean(to_analyse_o.PixelValues(to_analyse_o.PixelValues>0)),1);
     

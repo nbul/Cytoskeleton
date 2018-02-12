@@ -18,8 +18,8 @@ sum_dir = [filedir, '/summary'];
 dens_dir = [filedir, '/summary/kmeans'];
 MTSD_dir = [filedir, '/summary/MTSD'];
 %% Writing down summarised data MTSD and density embryo by embryo
-cd(MTSD_dir);
-files = dir('*.csv');
+cd(image_dir);
+files = dir('*.tif');
 Averages_dens = zeros(1,1);
 Averages_MTSD = zeros(1,1);
 for loop=1:numel(files)

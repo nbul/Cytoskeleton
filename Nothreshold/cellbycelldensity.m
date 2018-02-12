@@ -31,9 +31,9 @@ for k = 1:numel(b_valid)
     skew(k) = skewness(to_analyse_all.PixelValues);
     
     %Sdr
-    Sdr(k) = (sqrt(1+sum(px(:).*px(:)+(py(:).*py(:))))-1)/length(to_analyse_all.PixelValues);
+    Sdr(k) = (sqrt(1+sum(px2(:).*px2(:)*255*255+py2(:).*py2(:)*255*255))-1)/length(to_analyse_all.PixelValues);
     %Sdq - the root mean square gradient
-    Sdq(k) = sqrt(sum(px(:).*px(:)+(py(:).*py(:)))/length(to_analyse_all.PixelValues));
+    Sdq(k) = sqrt(sum(px2(:).*px2(:)+(py2(:).*py2(:)))/length(to_analyse_all.PixelValues))*255;
     
     
 end
