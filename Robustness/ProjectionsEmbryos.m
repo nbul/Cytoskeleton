@@ -6,7 +6,6 @@ close all
 %% Determening paths and setting folders
 currdir = pwd;
 addpath(currdir);
-javaaddpath(currdir);
 filedir = uigetdir();
 cd(filedir);
 
