@@ -29,7 +29,7 @@ if strcmp(color0, 'Yes')
     if exist([filedir, '/CD8projection'],'dir') == 0
         mkdir(filedir, '/CD8projection');
     end
-    stripe_dir = [filedir, '/CD8'];
+    stripe_dir = [filedir, '/CD8projection'];
 else
     color1 = questdlg(strcat('Which color is E-cad'),'Settings','Green', 'Red', 'Blue','Green');
     color2 = questdlg(strcat('Which color is MTs'),'Settings','Green', 'Red', 'Blue','Blue');
@@ -81,7 +81,7 @@ cd(filedir);
 files = dir('*.czi');
 %% Projections
 for i=1:numel(files)
-    name.original = [num2str(i), '_Out.czi'];
+    name.original = [num2str(i), '_Airyscan Processing.czi'];
     original = bfopen(name.original);
     
     Series = original{1,1};
@@ -127,7 +127,7 @@ for i=1:numel(files)
     cd(cytA_dir);
     imwrite(Cyto.average, [num2str(i), '.tif']);
     cd(filedir);
-    movefile([num2str(i), '_Out.czi'], ori_dir);
+    movefile([num2str(i), '_Airyscan Processing.czi'], ori_dir);
 end
 
 cd(currdir);
