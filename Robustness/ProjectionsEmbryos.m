@@ -108,7 +108,6 @@ for i=1:numel(files)
         imwrite(CD8.average, [num2str(i), '.tif']);
     else
         for plane = 1:(seriesCount/2)
-            CD8.average = plus(CD8.average,double(Series{plane*2-CD8color,1}));
             Cad.max = max(Cad.max, double(Series{plane*2-ColorCad,1}));
             Cyto.max = max(Cyto.max, double(Series{plane*2-ColorMT,1}));
             Cyto.average = plus(Cyto.average,double(Series{plane*2-ColorMT,1}));
