@@ -81,7 +81,7 @@ cd(filedir);
 files = dir('*.czi');
 %% Projections
 for i=1:numel(files)
-    name.original = [num2str(i), '_Airyscan Processing.czi'];
+    name.original = [num2str(i), '_Out.czi'];
     original = bfopen(name.original);
     
     Series = original{1,1};
@@ -126,7 +126,7 @@ for i=1:numel(files)
     cd(cytA_dir);
     imwrite(Cyto.average, [num2str(i), '.tif']);
     cd(filedir);
-    movefile([num2str(i), '_Airyscan Processing.czi'], ori_dir);
+    movefile([num2str(i), '_Out.czi'], ori_dir);
 end
 
 cd(currdir);
