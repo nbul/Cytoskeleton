@@ -46,7 +46,7 @@ for loop=1:length(files)
     cd(b_dir);
     Path = [b_dir, '/', num2str(Number),'/'];
     cd(Path);
-    Image_borders = imread('handCorrection.tif');
+    Image_borders = imread('handCorrection.png');
     [im_x, im_y] = size(Image2);
     
     %% Collect data about cells and boundaries
