@@ -6,7 +6,7 @@ to_analyse_all = struct([]);
 to_analyse_back_o = struct([]);
 
 mts_area = zeros(1, numel(b_valid));
-mts_bundling = zeros(1, numel(b_valid));
+mts_signal = zeros(1, numel(b_valid));
 
 %% Processed Image for Density Analysis
 image_original_double = im2double(Image);
@@ -22,6 +22,7 @@ for k = 1:numel(b_valid)
     % Density data from signal and background
     selected_signal = poly2mask(b_valid{k}(:,2),b_valid{k}(:,1),im_x,im_y);
     to_analyse_c = regionprops(selected_signal, im_bin_c,'PixelValues');
+    to_analyse_o = regionprops(selected_signal, Image,'PixelValues');
     
     % Relative to background and signal area 
     num_pixvalues_c = length(to_analyse_c.PixelValues(to_analyse_c.PixelValues(:, 1) ~= 0,1));
@@ -29,6 +30,7 @@ for k = 1:numel(b_valid)
     
     
     % Signal Area
-    mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);        
+    mts_area(k) = num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c);  
+    mts_signal(k) = mean(to_analyse_o.PixelValues(to_analyse_o.PixelValues(:, 1) ~= 0,1));
 end
 

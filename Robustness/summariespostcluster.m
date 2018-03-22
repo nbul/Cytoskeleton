@@ -1,51 +1,76 @@
+clc
+clear variables
+close all
 %% Determening paths and setting folders
 currdir = pwd;
 addpath(pwd);
 filedir = uigetdir();
 cd(filedir);
+
 sum_dir = [filedir, '/summary'];
-MTSD_dir = [filedir, '/summary/cellbycell'];
-
-%% Writing down pulled data MTSD
-Averages_MTSDall = zeros(1,2);
-data_k = zeros(1,2);
-Averages_MTSDbinned = zeros(1,5);
-cd(MTSD_dir);
+dens_dir = [filedir, '/summary/kmeans'];
+%% Writing down summarised data MTSD and density embryo by embryo
+cd(dens_dir);
 files = dir('*.csv');
-for loop=1:length(files)
-    Data = csvread(files(loop).name,1,0);
-    temp = [Data(:,4), Data(:,6)];
-    Data2 = Averages_MTSDall;
-    Averages_MTSDall  = [Data2; temp];
+Averages_dens = zeros(1,1);
+
+for loop=1:numel(files)/2
+    
+    %% Making summary of density
+    
+    Density_file = ['Summary_kmeans_', num2str(loop),'.csv'];
+    summary_dens = csvread(Density_file,1,0);
+    outlier_area = isoutlier(summary_dens(:,10), 'median');
+    outlier_ecc = outlier_area + isoutlier(summary_dens(:,11), 'median');
+    outlier_number_dens = length(outlier_ecc(outlier_ecc ~= 0));
+    summary_dens(outlier_ecc ~= 0,:) = [];
+    summary_dens(isnan(summary_dens(:,3)) == 1,:) = [];
+    Averages_dens(loop,1) = loop;
+    % Signal area
+    Averages_dens(loop,2) = mean(summary_dens(:,2));
+    Averages_dens(loop,3) = sqrt(var(summary_dens(:,2))/length(summary_dens(:,2)));
+    % Density
+    Averages_dens(loop,4) = mean(summary_dens(:,3));
+    Averages_dens(loop,5) = sqrt(var(summary_dens(:,3))/length(summary_dens(:,3)));
+    % Bundling
+    Averages_dens(loop,6) = mean(summary_dens(:,4));
+    Averages_dens(loop,7) = sqrt(var(summary_dens(:,4))/length(summary_dens(:,4)));
+    % Uniformity
+    Averages_dens(loop,8) = mean(summary_dens(:,5));
+    Averages_dens(loop,9) = sqrt(var(summary_dens(:,5))/length(summary_dens(:,5)));
+    % Sparseness
+    Averages_dens(loop,10) = mean(summary_dens(:,6));
+    Averages_dens(loop,11) = sqrt(var(summary_dens(:,6))/length(summary_dens(:,6)));
+    % Skewness
+    Averages_dens(loop,12) = mean(summary_dens(:, 7));
+    Averages_dens(loop,13) = sqrt(var(summary_dens(:, 7))/length(summary_dens(:, 7)));
+    % Kurtosis
+    Averages_dens(loop,14) = mean(summary_dens(:, 8));
+    Averages_dens(loop,15) = sqrt(var(summary_dens(:, 8))/length(summary_dens(:, 8)));
+    
+    
+    % gaps
+    Averages_dens(loop,16) = mean(summary_dens(:,9));
+    Averages_dens(loop,17) = sqrt(var(summary_dens(:,9))/length(summary_dens(:,9)));
+    % cell number and outliers
+    Averages_dens(loop,18) = length(summary_dens(:,1));
+    Averages_dens(loop,19) = outlier_number_dens;
+    % area
+    Averages_dens(loop,20) = mean(summary_dens(:,10));
+    Averages_dens(loop,21) = sqrt(var(summary_dens(:,10))/length(summary_dens(:,10)));
+    % eccentricity
+    Averages_dens(loop,22) = mean(summary_dens(:,11));
+    Averages_dens(loop,23) = sqrt(var(summary_dens(:,11))/length(summary_dens(:,11)));
 end
-Averages_MTSDall(1,:) = [];
-Averages_MTSDall = sortrows(Averages_MTSDall,1);
+
 cd(sum_dir);
-csvwrite('MTSDall.csv', Averages_MTSDall);
 
-for k=0.92:0.005:0.99
-    data_k =  Averages_MTSDall( Averages_MTSDall(:,1) >= k-0.0025 & Averages_MTSDall(:,1) < k+0.0025,:);
-    N = int8((k-0.915)/0.005);
-    Averages_MTSDbinned(N,1) = 0;
-    Averages_MTSDbinned(N,2) = 0;
-    Averages_MTSDbinned(N,3) = 0;
-    Averages_MTSDbinned(N,4) = 0;
-    if size(data_k,1)>1
-        Averages_MTSDbinned(N,1) = mean(data_k(:,1));
-        Averages_MTSDbinned(N,2) = sqrt(var(data_k(:,1))/length(data_k(:,1)));
-        Averages_MTSDbinned(N,3) = mean(data_k(:,2));
-        Averages_MTSDbinned(N,4) = sqrt(var(data_k(:,2))/length(data_k(:,2)));
-    elseif size(data_k,1)==1
-        Averages_MTSDbinned(N,1) = data_k(:,1);
-        Averages_MTSDbinned(N,2) = 0;
-        Averages_MTSDbinned(N,3) = data_k(:,2);
-        Averages_MTSDbinned(N,4) = 0;
-    end
-    Averages_MTSDbinned(N,5) = size(data_k,1);
-end
+headers_dens = {'Embryo', 'Signal area', 'sem','Density','sem','Bundling','sem',...
+    'Uniformity','sem', 'Sparseness','sem', 'Skewness','sem', 'Kurtosis','sem',...
+    'Gaps', 'sem', 'Cell number','Outliers', 'Area', 'sem', 'Eccentricity','sem'};
+csvwrite_with_headers('Summary_density.csv',Averages_dens,headers_dens);
 
-headers = {'Eccentricity','sem', 'MTSD', 'sem','cells'};
-csvwrite_with_headers('MTSD_binned.csv',Averages_MTSDbinned,headers);
+
 
 cd(currdir);
 clc

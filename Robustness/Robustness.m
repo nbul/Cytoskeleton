@@ -40,7 +40,7 @@ files = dir('*.tif');
 cd(currdir);
 
 Averages = zeros(length(files),7);
-headers = {'Embryo', 'Signal area', 'sem',...
+headers = {'Embryo', 'Signal area', 'sem','Signal intensity','sem',...
     'Area', 'sem','Eccentricity','sem','Direction_cell','sem', ...
     'SD', 'sem','DEV','sem', 'Elongation','sem', 'Alignment','sem',...
     'Cell number','Outliers'};
@@ -70,7 +70,7 @@ for loop=1:length(files)
     cd(b_dir);
     Path = [b_dir, '/', num2str(loop),'/'];
     cd(Path);
-    Image_borders = imread('handCorrection.tif');
+    Image_borders = imread('handCorrection.png');
     [im_x, im_y] = size(Image);
     
     %% Collect data about cells and boundaries
