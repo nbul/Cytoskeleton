@@ -33,18 +33,20 @@ distdata(:,1) = csvread([num2str(loop),'_distribution.csv'],0,0,[0,0,44,0]);
 
 %% Leaving only cells of the correct eccentricity
 counter = 0;
-celldataclean = zeros(1,2);
+celldataclean = zeros(1,3);
 distdataclean = distdata(:,1);
 for i = 1:size(celldata,1)
     if celldata(i,1)>= (ecc - error) && celldata(i,1) < (ecc + error)
         counter = counter + 1;
         celldataclean(counter,1) = celldata(i,1);
         celldataclean(counter,2) = celldata(i,4);
+        celldataclean(counter,3) = celldata(i,2);
         distdataclean(:,counter+1) = distdata(:,i+1);
         
     end
 end
 
+DEV = celldataclean(:,2) - celldataclean(:,3);
 %% centering distributions
 distdatashifted = distdata(:,1);
 for i = 1:counter
@@ -89,10 +91,13 @@ finaldata(3:47,2) = mean(distdatashifted(:,2:end),2); % average distribution
 finaldata(3:47,3) = std(distdatashifted(:,2:end),0,2); % standard deviation
 finaldata(3:47,4) = finaldata(3:47,3)/sqrt(counter - 1); % standard error
 
+edges2 = ceil(min(DEV)):1:ceil(max(DEV));
+[N,edges] = histcounts(DEV,edges2);
+bincenters = edges(1:end-1)+0.5;
 %% writing file
 cd(sumdir);
 csvwrite(['ecc_', num2str(ecc),'_error_',num2str(error),'.csv'], finaldata);
-
+csvwrite(['ecc_', num2str(ecc),'_error_',num2str(error),'_DEV.csv'], [bincenters', N']);
 cd(currdir);
 
 close all;

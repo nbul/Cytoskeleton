@@ -1,4 +1,4 @@
-function [p alpha] = circ_vmpdf(alpha, thetahat, kappa)
+function [p, alpha] = circ_vmpdf(alpha, thetahat, kappa, x)
 
 % [p alpha] = circ_vmpdf(alpha, w, p)
 %   Computes the circular von Mises pdf with preferred direction thetahat 
@@ -43,4 +43,4 @@ alpha = alpha(:);
 
 % evaluate pdf
 C = 1/(2*pi*besseli(0,kappa));
-p = 0.14 * C * exp(kappa*cos(alpha-thetahat));
+p = 2*(pi/length(x)) * C * exp(kappa*cos(alpha-thetahat));
