@@ -1,6 +1,5 @@
 %% Collect data about cells and boundaries
 
-clear image_borders checknumbers borders_bin B L b_valid
 borders_bin = imbinarize(rgb2gray(Image_borders),0);
 [B,L] = bwboundaries(borders_bin,'holes');
 
