@@ -16,6 +16,8 @@ skew = zeros(1, numel(b_valid));
 space = zeros(1, numel(b_valid));
 Ent1 = zeros(1, numel(b_valid));
 Ent2 = zeros(1, numel(b_valid));
+Sdq = zeros(1, numel(b_valid));
+Sdr = zeros(1, numel(b_valid));
 intensity = zeros(1, numel(b_valid));
 intensity_mts = zeros(1, numel(b_valid));
 
@@ -46,6 +48,7 @@ for k = 1:numel(b_valid)
     intensity(k) = mean(to_analyse_o.PixelValues)*255*255;
     intensity_mts(k) = mean(to_analyse_o.PixelValues(to_analyse_c.PixelValues(:,1)~= 0,1))*255*255;
     
+    %density
     if num_pixvalues_back_c ~= 0
         mts_density(k) = (((sum_pixvalues_o / num_pixvalues_c) - (sum_pixvalues_back_o / num_pixvalues_back_c)) / ...
             (sum_pixvalues_back_o / num_pixvalues_back_c)) * (num_pixvalues_c / (num_pixvalues_c + num_pixvalues_back_c));
@@ -98,5 +101,10 @@ for k = 1:numel(b_valid)
     
     Ent1(k) = entropy(im2double(Image2(selected_signal~= 0)));
     Ent2(k) = entropy(im2double(Image2((selected_signal.*im_bin_c)~= 0)));
+    %Sdq - the root mean square gradient
+    [px, py] = gradient(image_MT_gray);
+    Sdq(k) = sqrt(sum(px(:).*px(:)+(py(:).*py(:)))/length(to_analyse_all.PixelValues));
+    %Sdr - the developed interfacial area ratio    
+    Sdr(k) = (sqrt(1+sum(px(:).*px(:)+(py(:).*py(:))))-1)/length(to_analyse_all.PixelValues);
 end
 

@@ -21,7 +21,7 @@ cd(dens_res_dir);
 
 summary_dens = [cell_data(:,1),intensity',intensity_mts', mts_area', mts_density'...
     mts_bundling', Uniformity', UNAAD', Spars', skew', kurt', space',...
-    Ent1',Ent2', cell_data(:,3:4)];
+    Ent1',Ent2', Sdr', Sdq', cell_data(:,3:4)];
 
 outlier = isoutlier(summary_dens(:,end-1))+isoutlier(summary_dens(:,end));
 summary_dens(outlier > 0,:) = [];
