@@ -102,7 +102,7 @@ for k = 1:numel(b_valid)
     Ent1(k) = entropy(im2double(Image2(selected_signal~= 0)));
     Ent2(k) = entropy(im2double(Image2((selected_signal.*im_bin_c)~= 0)));
     %Sdq - the root mean square gradient
-    [px, py] = gradient(image_MT_gray);
+    [px, py] = gradient(im2double(Image2));
     Sdq(k) = sqrt(sum(px(:).*px(:)+(py(:).*py(:)))/length(to_analyse_all.PixelValues));
     %Sdr - the developed interfacial area ratio    
     Sdr(k) = (sqrt(1+sum(px(:).*px(:)+(py(:).*py(:))))-1)/length(to_analyse_all.PixelValues);
