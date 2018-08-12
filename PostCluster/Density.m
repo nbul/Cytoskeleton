@@ -99,8 +99,14 @@ for k = 1:numel(b_valid)
         space(k) =0;
     end
     
-    Ent1(k) = entropy(im2double(Image2(selected_signal~= 0)));
-    Ent2(k) = entropy(im2double(Image2((selected_signal.*im_bin_c)~= 0)));
+    if max(to_analyse_c.PixelValues)~= 0
+        Ent1(k) = entropy(im2double(Image2(selected_signal~= 0)));
+        Ent2(k) = entropy(im2double(Image2((selected_signal.*im_bin_c)~= 0)));
+    else
+        Ent1(k) = 0;
+        Ent2(k) = 0;
+    end
+    
     %Sdq - the root mean square gradient
     [px, py] = gradient(im2double(Image2));
     Sdq(k) = sqrt(sum(px(:).*px(:)+(py(:).*py(:)))/length(to_analyse_all.PixelValues));
