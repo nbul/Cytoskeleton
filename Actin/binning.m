@@ -18,11 +18,11 @@ files = dir('*.csv');
 color0 = questdlg(strcat('Which stages'),'Settings','12-15', '15', '15');
 if strcmp(color0, '15')
     ecc = 0.92:0.005:0.99;
-    int = repmat(0.0025,1,15);
+    int = repmat(0.025,1,15);
     N = 1:1:15;
 else
     ecc = [0.7:0.05:0.95,0.98];
-    int = [repmat(0.0025,1,15), 0.005];
+    int = [repmat(0.025,1,15), 0.005];
     N = 1:1:7;
 end
 
@@ -31,7 +31,7 @@ Averages_MTSDall = zeros(1,2);
 Averages_MTSDbinned = zeros(1,5);
 cd(MTSD_dir);
 for loop=1:length(files)
-    %MTSD_file = ['Summary_MTSD',num2str(loop),'.csv'];
+    MTSD_file = ['Summary_MTSD',num2str(loop),'.csv'];
     Data = csvread(files(loop).name,1,0);
     temp = [Data(:,5), Data(:,7)];
     Data2 = Averages_MTSDall;

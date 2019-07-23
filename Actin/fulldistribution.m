@@ -36,11 +36,11 @@ counter = 0;
 celldataclean = zeros(1,3);
 distdataclean = distdata(:,1);
 for i = 1:size(celldata,1)
-    if celldata(i,1)>= (ecc - error) && celldata(i,1) < (ecc + error)
+    if celldata(i,3)>= (ecc - error) && celldata(i,3) < (ecc + error)
         counter = counter + 1;
-        celldataclean(counter,1) = celldata(i,1);
-        celldataclean(counter,2) = celldata(i,4);
-        celldataclean(counter,3) = celldata(i,2);
+        celldataclean(counter,1) = celldata(i,3);
+        celldataclean(counter,2) = celldata(i,5);
+        celldataclean(counter,3) = celldata(i,4);
         distdataclean(:,counter+1) = distdata(:,i+1);
         
     end
@@ -77,6 +77,19 @@ for i = 1:45
 end
 
 distdatashifted = sortrows(distdatashifted,1);
+
+% phiarray = 2:4:178;
+% bin_size = 4;
+% binrange = -90 : bin_size : 90;
+% bincenter=binrange(1:(end-1)) + bin_size/2;
+% m_added_norm = zeros(45,size(distdatashifted,2));
+% m_added_norm(:,1) = bincenter;
+% for i=2:size(distdatashifted,2)
+%     fHB = distdatashifted(:,i)';
+%     fHB_norm = fHB./trapz(phiarray,fHB );
+%     m_added_norm(:,i) = fHB_norm';
+% end
+
 
 %% average statistics
 finaldata = zeros(1,4);
