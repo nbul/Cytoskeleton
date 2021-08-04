@@ -1,3 +1,4 @@
+%% full distribution modified for Spastin to group cells additionally by signal area
 clc;
 close all;
 clear variables;
