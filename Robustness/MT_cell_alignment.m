@@ -29,6 +29,7 @@ end
 celldata(1,:) = [];
 
 average= zeros(4,6);
+average2= zeros(4,5);
 counter2 = 0;
 error = 0.025;
 for ecc=0.7:0.05:0.85
@@ -51,12 +52,17 @@ for ecc=0.7:0.05:0.85
     
     [dataout, TF] = rmoutliers(celldataclean(:,4), 'quartiles');
     average(counter2,:) = [mean(celldataclean(:,1),1), std(celldataclean(:,1),0,1), mean(dataout,1), std(dataout), counter, sum(TF)];
+    average2(counter2,:) = [mean(celldataclean(:,1),1), std(celldataclean(:,1),0,1), mean(celldataclean(:,4),1), std(celldataclean(:,4),0,1), counter];
 end
 
 all = array2table(average);
 all.Properties.VariableNames = {'Eccentricity', 'EccSD', 'CellMTalignment','CellMTSD', 'Ncells', 'Noutliers'};
 cd(sumdir);
 writetable(all,'Cell_MT_alignment.csv');
+
+all2 = array2table(average2);
+all2.Properties.VariableNames = {'Eccentricity', 'EccSD', 'CellMTalignment','CellMTSD', 'Ncells'};
+writetable(all2,'Cell_MT_alignment_allcells.csv');
 cd(currdir);
 
 close all;
