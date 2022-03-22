@@ -41,6 +41,7 @@ close all
 
 image3=figure;
 imshow(Image * 0), title('Adjusted MTs Image');
+set(gcf, 'InvertHardCopy', 'off');
 hold on;
 for k = 1:length(b_valid)
     clear boundary_valid
