@@ -16,6 +16,13 @@ dens_dir =[filedir, '/cytoskeleton_average'];
 MTSD_dir =[filedir, '/cytoskeleton'];
 b_dir = [filedir, '/borders'];
 
+usedefault = questdlg(strcat('Is there PCA data'),'Settings','Yes','No','No');
+if strcmp(usedefault, 'No')
+    choice = 1;
+else
+    choice = 0;
+end
+
 %Folder to save information about cells
 if exist([filedir,'/images_analysed'],'dir') == 0
     mkdir(filedir,'/images_analysed');
@@ -33,6 +40,15 @@ if exist([filedir,'/images_Cells'],'dir') == 0
     mkdir(filedir,'/images_Cells');
 end
 im_dir3 = [filedir, '/images_Cells'];
+
+if choice == 0
+    %Folder to save information about cells
+    if exist([filedir,'/images_PCP'],'dir') == 0
+        mkdir(filedir,'/images_PCP');
+    end
+    im_dir4 = [filedir, '/images_PCP'];
+    pcp_dir = [filedir, '/pcp_polarity'];
+end
 
 if exist([filedir,'/summary'],'dir') == 0
     mkdir(filedir,'/summary');
@@ -54,6 +70,7 @@ cd(currdir);
 Averages = zeros(length(files),7);
 allmu = 0;
 allor = 0;
+allPCP = 0;
 headers = {'Embryo', 'Signal area', 'sem','Signal intensity','sem',...
     'Area', 'sem','Eccentricity','sem','Direction_cell','sem', ...
     'SD', 'sem','DEV','sem', 'Elongation','sem', 'Alignment','sem',...
@@ -87,6 +104,13 @@ for loop=1:length(files)
     Image_borders = imread('handCorrection.tif');
     [im_x, im_y] = size(Image);
     
+    if choice == 0
+        Path = [pcp_dir, '/', num2str(loop),'/Result/'];
+        cd(Path);
+        PCPdata = csvread('PCA_Cell-by-Cell_Polarity.csv', 1, 0);
+        PCPangle = PCPdata(:,3);
+    end
+    
     %% Collect data about cells and boundaries
     borders;
     
@@ -109,14 +133,30 @@ allmu(1) = [];
 allor(1) = [];
 
 cd(sum_dir);
-figure1 = polarhistogram(deg2rad(allmu), 15, 'FaceColor', '#77AC30', 'LineWidth',2);
-set(gca,'FontSize',20);
+figure1 = polarhistogram(deg2rad(allmu), 9, 'FaceColor', '#77AC30', 'LineWidth',2);
+set(gca,'FontSize',36);
+rticklabels([])
 saveas(figure1, 'MT_orientation.eps', 'epsc');
 
-figure1 = polarhistogram(deg2rad(allmu), 15, 'FaceColor', '#77AC30', 'LineWidth',2);
-set(gca,'FontSize',20);
-saveas(figure1, 'MT_orientation.eps', 'epsc');
+figure2 = polarhistogram(deg2rad(allor), 9, 'FaceColor', '#777777', 'LineWidth',2);
+set(gca,'FontSize',36);
+rticklabels([])
+saveas(figure2, 'Cell_orientation.eps', 'epsc');
 
+T = [allor,allmu, abs(allor-allmu)];
+T(T(:,3)>90,3) = T(T(:,3)>90,3) - 180
+Diffangle = array2table(T, 'VariableNames',{'Cell orientation', 'MT orientation', 'Cell-MT'});
+
+if choice == 0
+    allPCP(1) = [];
+    figure2 = polarhistogram(deg2rad(allPCP), 9, 'FaceColor', '#777777', 'LineWidth',2);
+    set(gca,'FontSize',36);
+    rticklabels([])
+    saveas(figure2, 'PCP_orientation.eps', 'epsc'); 
+    Tnew = array2table([allPCP, abs(allPCP-allor)],...
+        'VariableNames', {'PCP orientation', 'Cell-PCP'});
+    Diffangle = [Diffangle, Tnew];
+end
 
 Averages = sortrows(Averages,1);
 

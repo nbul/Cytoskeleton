@@ -9,6 +9,7 @@ summary(:,2) = mts_area'; % Signal area
 summary(:,3) = mts_signal'; % Signal intesity
 summary(:,4) = cell_data(:,3); % cell area
 summary(:,5) = cell_data(:,4); % eccentricity
+cell_data(cell_data(:,5)>90,5) = cell_data(cell_data(:,5)>90,5) - 180;
 summary(:,6) = cell_data(:,5); % cell orientation
 summary(:,7) = SD';
 summary(:,8) = mu';
@@ -31,25 +32,26 @@ csvwrite_with_headers(summary_filename,summary,headers2);
 meansin = sum(sind(cell_data(:,5)))/length(cell_data(:,5));
 meancos = sum(cosd(cell_data(:,5)))/length(cell_data(:,5));
 
-if meancos < 0 && meansin > 0
-    orientation = atand(meansin/meancos) + 180;
-elseif meancos > 0 && meansin < 0
-    orientation = atand(meansin/meancos) + 360;
-else
-    orientation = atand(meansin/meancos);
-end
+orientation = atand(meansin/meancos);
+
 
 munew = mu' - orientation;
-munew(munew > 180) = munew(munew > 180) - 180;
-munew(munew < -180) = munew(munew < -180) + 180;
+munew(munew > 90) = munew(munew > 90) - 180;
+munew(munew < -90) = munew(munew < -90) + 180;
 
 or_new = cell_data(:,5) - orientation;
-or_new(or_new > 180) = or_new(or_new > 180) - 180;
-or_new(or_new < -180) = or_new(or_new < -180) + 180;
+or_new(or_new > 90) = or_new(or_new > 90) - 180;
+or_new(or_new < -90) = or_new(or_new < -90) + 180;
 
 allmu = [allmu; munew];
 allor = [allor; or_new];
 
+if choice == 0
+    PCP_new = PCPangle - orientation;
+    PCP_new(PCP_new > 90) = PCP_new(PCP_new > 90) - 180;
+    PCP_new(PCP_new < -90) = PCP_new(PCP_new < -90) + 180;
+    allPCP = [allPCP; PCP_new];   
+end
 
 %% Averaged values
 Averages(loop,1) = loop;
