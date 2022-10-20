@@ -44,13 +44,16 @@ or_new(or_new > 90) = or_new(or_new > 90) - 180;
 or_new(or_new < -90) = or_new(or_new < -90) + 180;
 
 allmu = [allmu; munew];
+allmu2 = [allmu2; mu'];
 allor = [allor; or_new];
+allor2 = [allor2; cell_data(:,5)];
 
 if choice == 0
     PCP_new = PCPangle - orientation;
     PCP_new(PCP_new > 90) = PCP_new(PCP_new > 90) - 180;
     PCP_new(PCP_new < -90) = PCP_new(PCP_new < -90) + 180;
-    allPCP = [allPCP; PCP_new];   
+    allPCP = [allPCP; PCP_new];  
+    allPCP2 = [allPCP2; PCPangle];
 end
 
 %% Averaged values

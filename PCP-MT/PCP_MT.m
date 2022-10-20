@@ -71,6 +71,9 @@ Averages = zeros(length(files),7);
 allmu = 0;
 allor = 0;
 allPCP = 0;
+allmu2 = 0;
+allor2 = 0;
+allPCP2 = 0;
 headers = {'Embryo', 'Signal area', 'sem','Signal intensity','sem',...
     'Area', 'sem','Eccentricity','sem','Direction_cell','sem', ...
     'SD', 'sem','DEV','sem', 'Elongation','sem', 'Alignment','sem',...
