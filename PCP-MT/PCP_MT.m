@@ -134,38 +134,48 @@ end
 
 allmu(1) = [];
 allor(1) = [];
+allmu2(1) = [];
+allor2(1) = [];
 
 cd(sum_dir);
+ %% replace in the next line allmu with allmu2 to plot non-normalised distribution
 figure1 = polarhistogram(deg2rad(allmu), 9, 'FaceColor', '#77AC30', 'LineWidth',2);
 set(gca,'FontSize',36);
 rticklabels([])
 saveas(figure1, 'MT_orientation.eps', 'epsc');
 
+%% replace in the next line allor with allor2 to plot non-normalised distribution
 figure2 = polarhistogram(deg2rad(allor), 9, 'FaceColor', '#777777', 'LineWidth',2);
 set(gca,'FontSize',36);
 rticklabels([])
 saveas(figure2, 'Cell_orientation.eps', 'epsc');
-% 
-% T = [allor,allmu, abs(allor-allmu)];
-% T(T(:,3)>90,3) = abs(T(T(:,3)>90,3) - 180);
-% Diffangle = array2table(T, 'VariableNames',{'Cell orientation', 'MT orientation', 'Cell-MT'});
 
 if choice == 0
     allPCP(1) = [];
+    allPCP2(1) = [];
+    %% replace in the next line allPCP with allPCP2 to plot non-normalised distribution
     figure2 = polarhistogram(deg2rad(allPCP), 9, 'FaceColor', '#00FFFF', 'LineWidth',2);
     set(gca,'FontSize',36);
     rticklabels([])
     saveas(figure2, 'PCP_orientation.eps', 'epsc'); 
-%     T2 = [allPCP, abs(allor-allPCP)];
-%     T2(T2(:,2)>90,2) = abs(T2(T2(:,2)>90,2) - 180);
-%     Tnew = array2table(T2, 'VariableNames', {'PCP orientation', 'Cell-PCP'});
-%     Diffangle = [Diffangle, Tnew];
 end
 
 % writetable(Diffangle, 'all_angles.csv');
 Averages = sortrows(Averages,1);
 
 csvwrite_with_headers(Averages_filename,Averages,headers);
+
+
+%% comparing medians
+[pval1, med1, P1] = circ_cmtest(deg2rad(allor2),deg2rad(allPCP2));
+[pval2, med2, P2] = circ_cmtest(deg2rad(allor),deg2rad(allPCP));
+[pval3, med3, P3] = circ_cmtest(deg2rad(allor2),deg2rad(allmu2));
+[pval4, med4, P4] = circ_cmtest(deg2rad(allor),deg2rad(allmu));
+[pval5, med5, P5] = circ_cmtest(deg2rad(allPCP2),deg2rad(allmu2));
+[pval6, med6, P6] = circ_cmtest(deg2rad(allPCP),deg2rad(allmu));
+
+headers2 = {'cell-PCP', 'cell-PCP-norm','cell-MT','cell-MT-norm','PCP-MT','PCP-MT-norm'};
+csvwrite_with_headers('pvalues.csv',[pval1,pval2,pval3, pval4, pval5, pval6],headers2);
 cd(currdir);
 
 clc
