@@ -180,7 +180,7 @@ if choice == 0
     csvwrite_with_headers('pvalues.csv',[pval1,pval2,pval3, pval4, pval5, pval6],headers2);
 else
     headers2 = {'cell-MT','cell-MT-norm'};
-    csvwrite_with_headers('pvalues.csv',[pval3, pval4,headers2);
+    csvwrite_with_headers('pvalues.csv',[pval3, pval4],headers2);
     
 end
 
