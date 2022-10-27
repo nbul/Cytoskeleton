@@ -139,13 +139,13 @@ allor2(1) = [];
 
 cd(sum_dir);
  %% replace in the next line allmu with allmu2 to plot non-normalised distribution
-figure1 = polarhistogram(deg2rad(allmu), 9, 'FaceColor', '#77AC30', 'LineWidth',2);
+figure1 = polarhistogram(deg2rad([allmu; allmu + 180]), 18, 'FaceColor', '#77AC30', 'LineWidth',2);
 set(gca,'FontSize',36);
 rticklabels([])
 saveas(figure1, 'MT_orientation.eps', 'epsc');
 
 %% replace in the next line allor with allor2 to plot non-normalised distribution
-figure2 = polarhistogram(deg2rad(allor), 9, 'FaceColor', '#777777', 'LineWidth',2);
+figure2 = polarhistogram(deg2rad([allor; allor + 180]), 18, 'FaceColor', '#777777', 'LineWidth',2);
 set(gca,'FontSize',36);
 rticklabels([])
 saveas(figure2, 'Cell_orientation.eps', 'epsc');
@@ -154,7 +154,7 @@ if choice == 0
     allPCP(1) = [];
     allPCP2(1) = [];
     %% replace in the next line allPCP with allPCP2 to plot non-normalised distribution
-    figure2 = polarhistogram(deg2rad(allPCP), 9, 'FaceColor', '#00FFFF', 'LineWidth',2);
+    figure2 = polarhistogram(deg2rad([allPCP; allPCP + 180]), 18, 'FaceColor', '#00FFFF', 'LineWidth',2);
     set(gca,'FontSize',36);
     rticklabels([])
     saveas(figure2, 'PCP_orientation.eps', 'epsc'); 
