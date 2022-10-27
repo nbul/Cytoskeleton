@@ -167,15 +167,23 @@ csvwrite_with_headers(Averages_filename,Averages,headers);
 
 
 %% comparing medians
-[pval1, med1, P1] = circ_cmtest(deg2rad(allor2),deg2rad(allPCP2));
-[pval2, med2, P2] = circ_cmtest(deg2rad(allor),deg2rad(allPCP));
 [pval3, med3, P3] = circ_cmtest(deg2rad(allor2),deg2rad(allmu2));
 [pval4, med4, P4] = circ_cmtest(deg2rad(allor),deg2rad(allmu));
-[pval5, med5, P5] = circ_cmtest(deg2rad(allPCP2),deg2rad(allmu2));
-[pval6, med6, P6] = circ_cmtest(deg2rad(allPCP),deg2rad(allmu));
 
-headers2 = {'cell-PCP', 'cell-PCP-norm','cell-MT','cell-MT-norm','PCP-MT','PCP-MT-norm'};
-csvwrite_with_headers('pvalues.csv',[pval1,pval2,pval3, pval4, pval5, pval6],headers2);
+if choice == 0
+    [pval1, med1, P1] = circ_cmtest(deg2rad(allor2),deg2rad(allPCP2));
+    [pval2, med2, P2] = circ_cmtest(deg2rad(allor),deg2rad(allPCP));
+    [pval5, med5, P5] = circ_cmtest(deg2rad(allPCP2),deg2rad(allmu2));
+    [pval6, med6, P6] = circ_cmtest(deg2rad(allPCP),deg2rad(allmu));
+    
+    headers2 = {'cell-PCP', 'cell-PCP-norm','cell-MT','cell-MT-norm','PCP-MT','PCP-MT-norm'};
+    csvwrite_with_headers('pvalues.csv',[pval1,pval2,pval3, pval4, pval5, pval6],headers2);
+else
+    headers2 = {'cell-MT','cell-MT-norm'};
+    csvwrite_with_headers('pvalues.csv',[pval3, pval4,headers2);
+    
+end
+
 cd(currdir);
 
 clc
