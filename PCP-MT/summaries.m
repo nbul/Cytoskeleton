@@ -48,12 +48,23 @@ allmu2 = [allmu2; mu'];
 allor = [allor; or_new];
 allor2 = [allor2; cell_data(:,5)];
 
+
+fractions(loop,1:8) = [length(cell_data( abs(cell_data(:,5))<=45, 5))/length(cell_data(:,5))*100,...
+    length(cell_data( abs(cell_data(:,5))>45, 5))/length(cell_data(:,5))*100,...
+    length(or_new(or_new<=45))/length(or_new)*100, length(or_new(or_new>45))/length(or_new)*100,...
+    length(mu(mu<=45))/length(mu)*100, length(mu(mu>45))/length(mu)*100,...
+    length(munew(munew<=45))/length(munew)*100, length(munew(munew>45))/length(munew)*100];
+
 if choice == 0
     PCP_new = PCPangle - orientation;
     PCP_new(PCP_new > 90) = PCP_new(PCP_new > 90) - 180;
     PCP_new(PCP_new < -90) = PCP_new(PCP_new < -90) + 180;
-    allPCP = [allPCP; PCP_new];  
+    allPCP = [allPCP; PCP_new];
     allPCP2 = [allPCP2; PCPangle];
+    fractions(loop,9:12) = [length(PCPangle(PCPangle<=45))/length(PCPangle)*100,...
+        length(PCPangle(PCPangle>45))/length(PCPangle)*100,...
+        length(PCP_new(PCP_new<=45))/length(PCP_new)*100,...
+        length(PCP_new(PCP_new>45))/length(PCP_new)*100];
 end
 
 %% Averaged values

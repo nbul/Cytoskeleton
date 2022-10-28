@@ -68,6 +68,13 @@ files = dir('*.tif');
 cd(currdir);
 
 Averages = zeros(length(files),7);
+
+if choice == 0
+    fractions = zeros(length(files), 12);
+else
+    fractions = zeros(length(files), 8);
+end
+
 allmu = 0;
 allor = 0;
 allPCP = 0;
@@ -178,10 +185,14 @@ if choice == 0
     
     headers2 = {'cell-PCP', 'cell-PCP-norm','cell-MT','cell-MT-norm','PCP-MT','PCP-MT-norm'};
     csvwrite_with_headers('pvalues.csv',[pval1,pval2,pval3, pval4, pval5, pval6],headers2);
+    headers3 = {'CellPD','CellAP','CellPD_norm','CellAP_norm','MTPD','MTAP',...
+        'MTPDnorm','MTAPnorm','PCPPD','PCPAP', 'PCPPDnorm','PCPAPnorm'};
+    csvwrite_with_headers('fractions.csv',fractions,headers3);
 else
     headers2 = {'cell-MT','cell-MT-norm'};
     csvwrite_with_headers('pvalues.csv',[pval3, pval4],headers2);
-    
+    headers3 = {'CellPD','CellAP','CellPD_norm','CellAP_norm','MTPD','MTAP','MTPDnorm','MTAPnorm'};
+    csvwrite_with_headers('fractions.csv',fractions,headers3);
 end
 
 cd(currdir);
