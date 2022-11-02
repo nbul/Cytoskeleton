@@ -29,6 +29,8 @@ celldata(1,:) = [];
 distdata(:,1) = csvread([num2str(loop),'_distribution.csv'],0,0,[0,0,44,0]);
 
 MTSDdata = zeros(1,5);
+MTSDdataaverage = zeros(1,6);
+
 error = 0.025;
 for ecc=0.65:0.05:0.85
     
@@ -108,12 +110,21 @@ for ecc=0.65:0.05:0.85
     
     MTSDdata = [MTSDdata; mean(datatemp(:,1)), std(datatemp(:,1)), ...
         mean(datatemp(:,2)), std(datatemp(:,2)), length(datatemp(:,2))];
-    
+  
+   datatemp2 = [finaldata(3:47,1:2), finaldata(3:47,2)+ finaldata(3:47,3), finaldata(3:47,2)- finaldata(3:47,3)];
+   m_added_norm = datatemp2;
+   vonmises;
+   
+   MTSDdataaverage = [MTSDdataaverage; mean(datatemp(:,1)), std(datatemp(:,1)), SD, length(datatemp(:,2))];
 end
 
 MTSDdata(1,:) = [];
 headers = {'ECC', 'ECC_SD', 'MTSD', 'MTSD_SD', 'Cells'};
 csvwrite_with_headers('Ecc_vs_MTSD.csv',MTSDdata,headers);
+
+MTSDdataaverage(1,:) = [];
+headers = {'ECC', 'ECC_SD', 'MTSD', 'MTSD_upper', 'MTSD_lower', 'Cells'};
+csvwrite_with_headers('Ecc_vs_MTSD_average.csv',MTSDdataaverage,headers);
 cd(currdir);
 
 close all;
